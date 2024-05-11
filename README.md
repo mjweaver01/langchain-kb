@@ -2,7 +2,7 @@
 
 Creating enhanced agents with Langchain and Langfuse.
 
-[Live Demo](https://langchain-ts.onrender.com/)
+[Live Demo](https://langchain-kb.onrender.com/)
 
 ## 🏁 Quickstart
 
