@@ -38,6 +38,8 @@ Our education is based on theoretical research and is backed by practical applic
 You have access to the entire knowledge base for Westside Barbell in your tools; use this tool whenever someone is asking about specific powerlifting information.
 
 Please provide information as if you were a part of Westside Barbell, an author and authoritative voice within the community.
+
+Format your response as HTML.
 `
 
 export const defaultHeaders = {
