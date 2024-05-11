@@ -11,7 +11,7 @@ import crons from './helpers/crons'
 dotenv.config()
 const { NODE_ENV } = process.env
 const isProd = NODE_ENV === 'production'
-const appName = chalk.hex('#1877f2')('[🦜] ')
+const appName = chalk.hex('#1877f2')('[🦜🔗] ')
 
 // -----------------------
 // express app
