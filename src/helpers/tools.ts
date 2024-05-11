@@ -26,9 +26,11 @@ const generatePromptTemplate = (sentPrompt: string) =>
 
 const systemPrompt = await langfuse.getPrompt('System_Prompt')
 const compiledSystemPrompt = systemPrompt.prompt ? systemPrompt.prompt : systemPrompt
+const kbPrompt = await langfuse.getPrompt('KB_SYSTEM_PROMPT')
+const compiledKbSystemPrompt = kbPrompt.prompt ? kbPrompt.prompt : kbSystemPrompt
 export const gptSystemPromptTemplate = generatePromptTemplate(compiledSystemPrompt)
 export const gistSystemPromptTemplate = generatePromptTemplate(gistSystemPrompt)
-export const kbSystemPromptTemplate = generatePromptTemplate(kbSystemPrompt)
+export const kbSystemPromptTemplate = generatePromptTemplate(compiledKbSystemPrompt)
 
 const sitemapLoader = new DynamicTool({
   name: 'sitemap',
