@@ -2,6 +2,7 @@ import langfuse from './langfuse'
 import { supabase } from './supabase'
 import {
   tools,
+  kbTools,
   gptSystemPromptTemplate,
   gistSystemPromptTemplate,
   kbSystemPromptTemplate,
@@ -63,7 +64,7 @@ export const ask = async (
 
   const executor = AgentExecutor.fromAgentAndTools({
     agent: runnableAgent,
-    tools,
+    tools: isKb ? kbTools : tools,
   })
   const invokee = await executor.invoke(
     {

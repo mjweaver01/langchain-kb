@@ -5,8 +5,10 @@ export const fourModel = 'gpt-4-turbo'
 export const sitemapUrl =
   'https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml'
 
-export const sitemapPrompt =
-  'A tool for fetching and parsing data from URLs retrieved from a sitemap.'
+export const sitemapPrompt = `
+A tool for fetching and parsing data from URLs retrieved from a sitemap.
+This is the knowledge base that should be used for any and all questions.
+`
 
 export const systemPrompt = `You are a helpful assistant.`
 

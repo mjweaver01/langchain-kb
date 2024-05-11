@@ -32,22 +32,22 @@ export const gptSystemPromptTemplate = generatePromptTemplate(compiledSystemProm
 export const gistSystemPromptTemplate = generatePromptTemplate(gistSystemPrompt)
 export const kbSystemPromptTemplate = generatePromptTemplate(compiledKbSystemPrompt)
 
-const sitemapLoader = new DynamicTool({
-  name: 'sitemap',
+const knowledgeBaseLoader = new DynamicTool({
+  name: 'knowledge_base',
   description: sitemapPrompt,
   func: async (question: string, runManager, meta) => {
     const sessionId = meta?.configurable?.sessionId
 
     const trace = langfuse.trace({
-      name: 'sitemap',
+      name: 'knowledge_base',
       input: JSON.stringify(question),
       sessionId,
     })
 
     const generation = trace.generation({
-      name: 'sitemap',
+      name: 'knowledge_base',
       input: JSON.stringify(question),
-      model: 'wikipedia',
+      model: 'knowledge_base',
     })
 
     try {
@@ -142,4 +142,6 @@ const WikipediaQuery = new DynamicTool({
   },
 })
 
-export const tools = [WikipediaQuery, new Calculator(), sitemapLoader]
+export const tools = [WikipediaQuery, new Calculator()]
+
+export const kbTools = [knowledgeBaseLoader]
