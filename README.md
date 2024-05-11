@@ -1,4 +1,4 @@
-# 🐳 langchain-ts
+# 🦜 langchain-ts
 
 Creating enhanced agents with Langchain and Langfuse.
 
