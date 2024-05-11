@@ -1,4 +1,4 @@
-# 🦜🔗 langchain-ts
+# 🦜🔗 langchain-kb
 
 Creating enhanced agents with Langchain and Langfuse.
 
