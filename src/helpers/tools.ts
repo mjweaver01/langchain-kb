@@ -55,8 +55,8 @@ const sitemapLoader = new DynamicTool({
         completionStartTime: new Date(),
       })
 
-      const loader = new SitemapLoader(sitemapUrl)
-      const result = loader.load()
+      const loader = new SitemapLoader(sitemapXml)
+      const result = await loader.load()
 
       generation.end({
         output: JSON.stringify(result),

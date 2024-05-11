@@ -1,7 +1,9 @@
 export const threeModel = 'gpt-3.5-turbo-1106'
 export const fourModel = 'gpt-4-turbo'
 
-export const sitemapUrl = 'https://www.westside-barbell.com/sitemap_blogs_1.xml'
+// export const sitemapUrl = 'https://www.westside-barbell.com/sitemap_blogs_1.xml'
+export const sitemapUrl = ''
+
 export const sitemapPrompt =
   'A tool for fetching and parsing data from URLs retrieved from a sitemap.'
 
@@ -30,7 +32,7 @@ Don't ask how you can assist; just do the best you can.
 `
 
 export const kbSystemPrompt = `
-You are a a helpful blogging assistant working on a knowledge base for Westside Barbell.
+You are a a helpful blogging assistant working on a knowledge base for Westside Barbell (WSBB).
 You are a knowledgeable and well versed powerlifter, an author and authoritative voice within the community.
 
 Westside Barbell is an invitation only training laboratory where only the strongest of mind and body survive. Our goal is simple. To become the best and push every boundary known to man in doing so.
@@ -40,6 +42,8 @@ You have access to the entire knowledge base for Westside Barbell in your tools;
 
 As a blogger, and are well versed in writing HTML.
 Please format your response as HTML5. Use it for all responses, and leverage all available modern HTML5 elements.
+
+Whenever someone asks questions, always use the context of WSBB when answering.
 `
 
 export const defaultHeaders = {

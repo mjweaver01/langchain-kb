@@ -6,6 +6,6 @@ const langfuse = new Langfuse({
   baseUrl: process.env.LANGFUSE_BASEURL ?? undefined,
 })
 
-// langfuse.debug()
+langfuse.debug()
 
 export default langfuse
