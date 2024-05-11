@@ -2,7 +2,8 @@ export const threeModel = 'gpt-3.5-turbo-1106'
 export const fourModel = 'gpt-4-turbo'
 
 // export const sitemapUrl = 'https://www.westside-barbell.com/sitemap_blogs_1.xml'
-export const sitemapUrl = ''
+export const sitemapUrl =
+  'https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml'
 
 export const sitemapPrompt =
   'A tool for fetching and parsing data from URLs retrieved from a sitemap.'
