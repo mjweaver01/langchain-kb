@@ -1,6 +1,4 @@
 import { Request, Response } from 'express'
-import { askQuestion } from './ask'
-import { getStatus } from './status'
 import { getCache, saveToCache } from './cache'
 import loggy from './loggy'
 
@@ -13,10 +11,9 @@ export const handler = async (req: Request, res: Response, context: SourceType) 
 
   loggy(`[${context}] ${input?.toString().substring(0, 50) ?? 'hit handler'}`, false)
 
-  const isStatus = context === 'status'
   const currentTime = Date.now()
 
-  if (input?.length <= 0 && url?.length <= 0 && data?.length <= 0 && context !== 'status')
+  if (input?.length <= 0 && url?.length <= 0 && data?.length <= 0)
     return res.json({
       code: 403,
       message: 'Please provide a question, data, or a url to fetch',
@@ -24,7 +21,7 @@ export const handler = async (req: Request, res: Response, context: SourceType) 
     })
 
   if (!nocache) {
-    const cachedData = await getCache(context, currentTime, isStatus ? null : input)
+    const cachedData = await getCache(context, currentTime, input)
     const latestCacheHit = cachedData?.[0]
 
     if (latestCacheHit && latestCacheHit.answer) {
@@ -39,13 +36,6 @@ export const handler = async (req: Request, res: Response, context: SourceType) 
   if (url) {
     try {
       input = await fetch(url).then((res) => res.text())
-    } catch (e) {
-      console.error(e)
-      return res.status(500).send(e)
-    }
-  } else if (isStatus) {
-    try {
-      input = await getStatus().then((res) => JSON.stringify(res))
     } catch (e) {
       console.error(e)
       return res.status(500).send(e)

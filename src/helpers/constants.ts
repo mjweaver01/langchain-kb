@@ -3,7 +3,7 @@ export const defaultShopId = 'madisonbraids.myshopify.com'
 export const threeModel = 'gpt-3.5-turbo-1106'
 export const fourModel = 'gpt-4-turbo'
 
-export const genericSystemPrompt = `You are a helpful assistant.`
+export const systemPrompt = `You are a helpful assistant.`
 
 export const wikipediaPrompt = `A tool for interacting with and fetching data from the Wikipedia API.
 `

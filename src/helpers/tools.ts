@@ -10,7 +10,7 @@ import {
   helpCenterPrompt,
   wikipediaPrompt,
   gistSystemPrompt,
-  statusSystemPrompt,
+  systemPrompt,
   forecastingPrompt,
 } from './constants'
 import loggy from './loggy'
@@ -23,9 +23,10 @@ const generatePromptTemplate = (sentPrompt: string) =>
     new MessagesPlaceholder('agent_scratchpad'),
   ])
 
-export const gptSystemPromptTemplate = generatePromptTemplate(genericSystemPrompt)
+const systemPrompt = await langfuse.getPrompt('System Prompt')
+const compiledSystemPrompt = systemPrompt.prompt ? systemPrompt.prompt : systemPrompt
+export const gptSystemPromptTemplate = generatePromptTemplate(compiledSystemPrompt)
 export const gistSystemPromptTemplate = generatePromptTemplate(gistSystemPrompt)
-export const statusSystemPromptTemplate = generatePromptTemplate(statusSystemPrompt)
 
 const WikipediaQuery = new DynamicTool({
   name: 'wikipedia',
@@ -84,7 +85,4 @@ const WikipediaQuery = new DynamicTool({
   },
 })
 
-export const tools = [
-  WikipediaQuery,
-  new Calculator(),
-]
+export const tools = [WikipediaQuery, new Calculator()]

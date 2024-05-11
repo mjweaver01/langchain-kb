@@ -1,10 +1,6 @@
 import langfuse from './langfuse'
 import { supabase } from './supabase'
-import {
-  tools,
-  gptSystemPromptTemplate,
-  gistSystemPromptTemplate,
-} from './tools'
+import { tools, gptSystemPromptTemplate, gistSystemPromptTemplate } from './tools'
 import { modelWithFunctions, newModelWithFunctions } from './llm'
 import { defaultQuestion, defaultShopId } from './constants'
 import random from './idGenerator'
@@ -16,7 +12,6 @@ import { AgentExecutor, type AgentStep } from 'langchain/agents'
 import { AIMessage, BaseMessage, HumanMessage } from '@langchain/core/messages'
 import { formatToOpenAIFunctionMessages } from 'langchain/agents/format_scratchpad'
 import { OpenAIFunctionsAgentOutputParser } from 'langchain/agents/openai/output_parser'
-import { statusSystemPromptTemplate } from './tools'
 
 export const ask = async (
   input: string,
@@ -26,17 +21,9 @@ export const ask = async (
   loggy(`[${source}] Asking: ${JSON.stringify(input).substring(0, 100)}`)
 
   const isGist = source === 'gist'
-  const isStatus = source === 'status'
 
-  const currentPromptTemplate = isStatus
-    ? statusSystemPromptTemplate
-    : isGist
-    ? gistSystemPromptTemplate
-    : gptSystemPromptTemplate
-  const currentModelWithFunctions =
-    isStatus || isGist
-      ? newModelWithFunctions
-      : modelWithFunctions
+  const currentPromptTemplate = isGist ? gistSystemPromptTemplate : gptSystemPromptTemplate
+  const currentModelWithFunctions = isGist ? newModelWithFunctions : modelWithFunctions
 
   const { data } = await supabase
     .from('conversations')

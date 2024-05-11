@@ -19,7 +19,8 @@
     "crypto-random-bigint": "^2.1.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "langchain": "^0.1.33"
+    "langchain": "^0.1.33",
+    "langfuse": "^3.4.0"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.2",
