@@ -1,6 +1,11 @@
 import langfuse from './langfuse'
 import { supabase } from './supabase'
-import { tools, gptSystemPromptTemplate, gistSystemPromptTemplate } from './tools'
+import {
+  tools,
+  gptSystemPromptTemplate,
+  gistSystemPromptTemplate,
+  kbSystemPromptTemplate,
+} from './tools'
 import { modelWithFunctions, newModelWithFunctions } from './llm'
 import { defaultQuestion } from './constants'
 import random from './idGenerator'
@@ -21,8 +26,13 @@ export const ask = async (
   loggy(`[${source}] Asking: ${JSON.stringify(input).substring(0, 100)}`)
 
   const isGist = source === 'gist'
+  const isKb = source === 'kb'
 
-  const currentPromptTemplate = isGist ? gistSystemPromptTemplate : gptSystemPromptTemplate
+  const currentPromptTemplate = isKb
+    ? kbSystemPromptTemplate
+    : isGist
+    ? gistSystemPromptTemplate
+    : gptSystemPromptTemplate
   const currentModelWithFunctions = isGist ? newModelWithFunctions : modelWithFunctions
 
   const { data } = await supabase

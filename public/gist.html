@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gist</title>
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+
+  <body>
+    <div id="app">
+      <h1>🦜🔗 Gist</h1>
+      <p>Provides the gist of a provided URL, or data object.</p>
+      <div>
+        You can post to
+        <pre>/get-gist</pre>
+        with an object containing a
+        <pre>data</pre>
+        object, or
+        <pre>url</pre>
+        string to fetch.
+      </div>
+      <div id="answer">
+        <h2>
+          Asking to explain the
+          <pre>constants.ts</pre>
+          file
+        </h2>
+        <p>Please be patient; sometimes this takes 5-10 seconds to reply.</p>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    const app = document.getElementById('app')
+    const constantsURL =
+      'https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/helpers/constants.ts'
+
+    fetch(`/get-gist${window.location.search}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        url: constantsURL,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        try {
+          const parsedData = JSON.parse(JSON.stringify(data))
+          console.log(parsedData)
+          document.getElementById(
+            'answer',
+          ).innerHTML = `<h2>Gist of <a href="${constantsURL}" target="_blank"><pre>constants.ts</pre></a></h2>${parsedData.answer.output}`
+        } catch {}
+      })
+  </script>
+</html>

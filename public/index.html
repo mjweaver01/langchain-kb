@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Gist</title>
+    <title>Knowledge Base</title>
     <link rel="icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,51 +10,88 @@
 
   <body>
     <div id="app">
-      <h1>🦜🔗 Gist</h1>
-      <p>Provides the gist of a provided URL, or data object.</p>
+      <h1>🦜🔗 Knowledge Base</h1>
+      <p>A knowledge base from the provided URL in the constants file.</p>
       <div>
         You can post to
-        <pre>/get-gist</pre>
+        <pre>/ask-kb</pre>
         with an object containing a
-        <pre>data</pre>
-        object, or
-        <pre>url</pre>
-        string to fetch.
+        <pre>question</pre>
       </div>
-      <div id="answer">
-        <h2>
-          Asking to explain the
-          <pre>constants.ts</pre>
-          file
-        </h2>
-        <p>Please be patient; sometimes this takes 5-10 seconds to reply.</p>
+      <div>
+        You can also include a
+        <pre>conversationId</pre>
+        to continue a conversation
       </div>
+      <br>
+      <div id="question">
+        <form id="form">
+          <textarea id="question-input" name="question" placeholder="Ask anything..."></textarea>
+          <button type="submit" id="ask">Ask</button>
+        </form>
+      </div>
+      <div id="answer"></div>
     </div>
   </body>
 
   <script>
     const app = document.getElementById('app')
-    const constantsURL =
-      'https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/helpers/constants.ts'
+    async function askMoby(q) {
+      const question = q.length > 0 ? q : 'What is the Conjugate Method?'
 
-    fetch(`/get-gist${window.location.search}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        url: constantsURL,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        try {
-          const parsedData = JSON.parse(JSON.stringify(data))
-          console.log(parsedData)
-          document.getElementById(
-            'answer',
-          ).innerHTML = `<h2>Gist of <a href="${constantsURL}" target="_blank"><pre>constants.ts</pre></a></h2>${parsedData.answer.output}`
-        } catch {}
+      document.getElementById('answer').innerHTML = `<h2>Asking: "${question}"</h2>
+      <p>Please be patient; sometimes this takes 5-10 seconds to reply..</p>
+      `
+
+      const form = document.getElementById('form')
+      Array.from(form.elements).forEach((formElement) => (formElement.disabled = true))
+
+      await fetch(`/ask-kb${window.location.search}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question,
+        }),
       })
+        .then((res) => res.json())
+        .then((data) => {
+          try {
+            const parsedData = JSON.parse(JSON.stringify(data))
+            console.log(parsedData)
+
+            if (parsedData.answer) {
+              const d1 = document.createElement('div')
+              d1.innerHTML += `<h2>"${question}"</h2>`
+
+              const d2 = document.createElement('div')
+              d2.innerHTML = parsedData.answer.output ?? parsedData.answer
+              document.getElementById('answer').innerHTML = `${d1.innerHTML}${d2.innerHTML}${
+                parsedData.isCached
+                  ? `<p><i>Last updated ${parseInt(
+                      Math.abs((new Date() - new Date(parseInt(parsedData.time))) / 60000),
+                    )} minutes ago</i></p>`
+                  : ''
+              }`
+            }
+          } catch {}
+        })
+      Array.from(form.elements).forEach((formElement) => (formElement.disabled = false))
+    }
+
+    // ask moby on form submit
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      const question = document.getElementById('question-input').value
+      await askMoby(question)
+    })
+
+    // ask one time for the one time
+    document.getElementById('ask').click()
   </script>
 </html>
+</html>
+
+

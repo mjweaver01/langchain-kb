@@ -23,6 +23,7 @@ app.use(express.json())
 // -----------------------
 // routes
 // -----------------------
+app.post('/ask-kb', (req: Request, res: Response) => handler(req, res, 'kb'))
 app.post('/ask-gpt', (req: Request, res: Response) => handler(req, res, 'gpt'))
 app.post('/get-gist', (req: Request, res: Response) => handler(req, res, 'gist'))
 
