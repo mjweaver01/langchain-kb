@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+:root {
+  --mobile: 768px;
+  --blue: #0c70f2;
+  --light-blue: #dbe8f7;
+  --dark-blue: #0a5ec4;
+  --black: #000;
+  --white: #fff;
+  --transparent: rgba(255, 255, 255, 0);
+}
+
+* {
+  font-family: Inter, sans-serif;
+}
+
+pre {
+  display: inline;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+}
+
+h1 {
+  margin: 2rem 0 1rem 0;
+  font-size: 3em;
+}
+
+h2 {
+  background-clip: text;
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+p {
+  margin-bottom: 2rem;
+}
+
+pre {
+  display: inline-block;
+  color: white;
+  background: black;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  gap: 1em;
+}
+
+form textarea {
+  flex-basis: 200%;
+}
+
+input,
+textarea,
+button {
+  display: block;
+  appearance: none;
+  padding: 1em;
+  background: var(--white);
+  border: 1px solid var(--blue);
+  border-radius: 5px;
+  width: 100%;
+}
+
+button {
+  background: var(--blue);
+  color: var(--white);
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--dark-blue);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-image: radial-gradient(
+      circle farthest-corner at 100% 50%,
+      var(--light-blue),
+      var(--transparent)
+    ),
+    radial-gradient(circle farthest-corner at 0% 100%, #fff 6%, rgba(255, 255, 255, 0)),
+    radial-gradient(circle farthest-corner at 50% 50%, whitesmoke, rgba(219, 219, 219, 0)),
+    url(squares.png);
+  background-position: 0 0, 0 0, 0 0, 0 0;
+  background-size: auto, auto, auto, 160px;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255, 0.97);
+  padding: 1rem;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.42);
+}
+
+nav img {
+  width: 125px;
+}
+
+@media (min-width: 500px) {
+  nav img {
+    width: 175px;
+  }
+}
+
+a {
+  color: var(--black);
+}
+
+#app {
+  margin: 0 auto;
+  width: 80%;
+  max-width: 600px;
+}
+
+#services {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+#services p {
+  margin: 0;
+}
+
+#services strong {
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+@media (min-width: 500px) {
+  #services {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
