@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { getCache, saveToCache } from './cache'
+import { askQuestion } from './ask'
 import loggy from './loggy'
 
 export const handler = async (req: Request, res: Response, context: SourceType) => {

@@ -23,7 +23,7 @@ const generatePromptTemplate = (sentPrompt: string) =>
     new MessagesPlaceholder('agent_scratchpad'),
   ])
 
-const systemPrompt = await langfuse.getPrompt('System Prompt')
+const systemPrompt = await langfuse.getPrompt('System_Prompt')
 const compiledSystemPrompt = systemPrompt.prompt ? systemPrompt.prompt : systemPrompt
 export const gptSystemPromptTemplate = generatePromptTemplate(compiledSystemPrompt)
 export const gistSystemPromptTemplate = generatePromptTemplate(gistSystemPrompt)

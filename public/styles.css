@@ -92,8 +92,7 @@ body {
       var(--transparent)
     ),
     radial-gradient(circle farthest-corner at 0% 100%, #fff 6%, rgba(255, 255, 255, 0)),
-    radial-gradient(circle farthest-corner at 50% 50%, whitesmoke, rgba(219, 219, 219, 0)),
-    url(squares.png);
+    radial-gradient(circle farthest-corner at 50% 50%, whitesmoke, rgba(219, 219, 219, 0));
   background-position: 0 0, 0 0, 0 0, 0 0;
   background-size: auto, auto, auto, 160px;
 }
