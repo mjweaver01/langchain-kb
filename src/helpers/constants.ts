@@ -1,5 +1,3 @@
-export const defaultShopId = 'madisonbraids.myshopify.com'
-
 export const threeModel = 'gpt-3.5-turbo-1106'
 export const fourModel = 'gpt-4-turbo'
 
@@ -29,7 +27,6 @@ Don't ask how you can assist; just do the best you can.
 
 export const defaultHeaders = {
   'Content-Type': 'application/json',
-  // Authorization: `Bearer ${process.env.TW_IDENTITY_TOKEN}`,
 }
 
 export const FIVE_MINUTES = 5 * 60 * 1000
