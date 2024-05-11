@@ -2,7 +2,7 @@ import langfuse from './langfuse'
 import { supabase } from './supabase'
 import { tools, gptSystemPromptTemplate, gistSystemPromptTemplate } from './tools'
 import { modelWithFunctions, newModelWithFunctions } from './llm'
-import { defaultQuestion, defaultShopId } from './constants'
+import { defaultQuestion } from './constants'
 import random from './idGenerator'
 import loggy from './loggy'
 
@@ -61,7 +61,7 @@ export const ask = async (
       chat_history: chatHistory,
     },
     {
-      configurable: { sessionId: conversationId, shopId: defaultShopId },
+      configurable: { sessionId: conversationId },
     },
   )
 
