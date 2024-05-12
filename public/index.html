@@ -17,6 +17,11 @@
         <h1>🦜🔗 Knowledge Base</h1>
         <p>A knowledge base from a <a href="https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml" target="_blank">provided sitemap</a>:
           Westside Barbell's <a href="https://westside-barbell.com/blogs/the-blog/" target="_blank">Shopify Blog</a>.</p>
+        <div class="questions" v-if="messages.length <= 0">
+          <div class="question" v-for="question in defaultQuestions" @click="ask(question)">
+            {{ question }}
+          </div>
+        </div>
         <div id="imessage" class="imessage" v-if="messages.length > 0">
           <p 
             v-for="message in messages" 
@@ -36,7 +41,7 @@
         </div>
         <div class="clear" v-if="messages.length > 0" @click="clearConversation">Clear conversation</div>
         <div class="current-message">
-          <div class="question">
+          <div class="ask-question">
             <form @submit.prevent="ask">
               <input name="question" placeholder="Ask anything..." v-model="question"/>
               <button type="submit">Ask</button>
@@ -56,17 +61,23 @@
           messages: [],
           loading: false,
           conversationId: '',
-          question: 'Who is Louie?'
+          question: '',
+          defaultQuestions: [
+            'Who is Louie?',
+            'Who is Tom to louie?',
+            'How can i best use the Reactive Method in my workout routines?',
+            'What is the Conjugate Method?',
+            'What is the reverse hyper invented for? How is it best used?',
+            'Who is Louie Simmons? What is he best known for?',
+            'Give me the best powerlifting routine as a newcomer to the powerlifting world',
+            'What advice would Louie give to a powerlifer struggling to improve their numbers?',
+            'Give me a workout louie would have loved',
+          ]
         }
       },
-      mounted() {
-        this.ask()
-      },
       methods: {
-        async ask () {
-          console.log('hi', this.question)
-          const question = this.question.trim() !== '' ? this.question : false
-          console.log(question)
+        async ask (sentQuestion) {
+          const question = sentQuestion?.trim() !== '' ? sentQuestion : this.question.trim() !== '' ? this.question : false
           if(question === false) return
 
           this.loading = true
@@ -92,8 +103,6 @@
             .then((data) => {
               try {
                 const parsedData = JSON.parse(JSON.stringify(data))
-                console.log(parsedData)
-
                 if(parsedData.conversationId) this.conversationId = parsedData.conversationId
 
                 if (parsedData.answer) {

@@ -46,7 +46,8 @@ You have access to the entire knowledge base for Westside Barbell in your tools;
 
 As a blogger, and are well versed in writing HTML.
 Please format your response as HTML5. Use it for all responses, and leverage all available modern HTML5 elements.
-Always format your response as HTML. Any time you encounter markdown, convert it to HTML.
+Always format your response as HTML.
+ALways convert markdown to HTML.
 Don't provide a doctype, or any other setup markup; only provide the markup inside of the <body> tag.
 
 Whenever someone asks questions, always use the context of WSBB when answering.
@@ -58,13 +59,3 @@ export const defaultHeaders = {
 }
 
 export const FIVE_MINUTES = 5 * 60 * 1000
-
-export const defaultQuestions = [
-  'How can i best use the Reactive Method in my workout routines?',
-  'What is the Conjugate Method?',
-  'What is the reverse hyper invented for? How is it best used?',
-  'Who is Louie Simmons? What is he best known for?',
-  'Give me the best powerlifting routine as a newcomer to the powerlifting world',
-  'What advice would Louie give to a powerlifer struggling to improve their numbers?',
-  'Give me a workout louie would have loved',
-]

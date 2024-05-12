@@ -165,3 +165,21 @@ a {
   font-size: 0.9em;
   cursor: pointer;
 }
+
+.questions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 1em;
+  margin-bottom: 2em;
+}
+
+.question {
+  padding: 0.5em;
+  border-radius: 5px;
+  border: 1px solid var(--blue);
+  cursor: pointer;
+}
+
+.question:hover {
+  box-shadow: 1px 5px 10px var(--blue);
+}
