@@ -39,11 +39,11 @@
           </p>
           <div id="bottom"></div>
         </div>
-        <div class="clear" v-if="messages.length > 0" @click="clearConversation">Clear conversation</div>
         <div class="current-message">
+          <div class="clear" v-if="messages.length > 0" @click="clearConversation">Clear conversation</div>
           <div class="ask-question">
             <form @submit.prevent="ask()">
-              <input name="question" placeholder="Ask anything..." v-model="question"/>
+              <input id="question-input" name="question" placeholder="Ask anything..." v-model="question"/>
               <button type="submit">Ask</button>
             </form>
           </div>
@@ -102,15 +102,18 @@
             .then((res) => res.json())
             .then((data) => {
               try {
-                const parsedData = JSON.parse(JSON.stringify(data))
-                if(parsedData.conversationId) this.conversationId = parsedData.conversationId
+                const parsedData = JSON.parse(JSON.stringify(data)) 
 
                 if (parsedData.answer) {
+                  if(parsedData.answer.conversationId) {
+                    this.conversationId = parsedData.answer.conversationId
+                  }
+                  
                   this.messages.push({
                     ...parsedData,
                     text: parsedData.answer,
                     isCached: parsedData.isCached || false,
-                    time: parsedData.time || false
+                    time: parsedData.time || false,
                   })
                 }
 
@@ -125,7 +128,8 @@
 
         scrollToBottom() {
           this.$nextTick(() => {
-            document.getElementById('app').scrollTop = document.getElementById('imessage').scrollHeight;
+            document.getElementById('question-input').focus()
+            this.$el.scrollTop = this.$el.scrollHeight;
           })
         },
 
