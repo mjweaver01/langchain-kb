@@ -31,6 +31,7 @@
           </p>
           <div id="bottom"></div>
         </div>
+        <div class="clear" v-if="messages.length > 0" @click="clearConversation">Clear conversation</div>
         <div class="current-message">
           <div class="question">
             <form @submit.prevent="ask">
@@ -54,6 +55,9 @@
           conversationId: '',
           question: 'Who is Louie?'
         }
+      },
+      mounted() {
+        this.ask()
       },
       methods: {
         async ask () {
@@ -111,6 +115,11 @@
           this.$nextTick(() => {
             document.getElementById('app').scrollTop = document.getElementById('imessage').scrollHeight;
           })
+        },
+
+        clearConversation() {
+          this.messages = []
+          this.question = ''
         }
       }
     }).mount('#app')
