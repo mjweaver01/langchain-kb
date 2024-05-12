@@ -112,7 +112,9 @@ p[class^='from-'].emoji::before {
   margin-top: 1rem !important;
 }
 
-.imessage section > * {
+.imessage section > *,
+.imessage div > *,
+.imessage p > * {
   font-size: 1em !important;
   margin-top: 0 !important;
   margin-bottom: 1rem !important;
@@ -121,10 +123,16 @@ p[class^='from-'].emoji::before {
   padding: 0 !important;
 }
 
-.imessage section > ul {
+.imessage p p {
+  margin-bottom: 1em !important;
+}
+
+.imessage ul {
   padding-left: 1em !important;
 }
 
-.imessage section > *:last-child {
+.imessage section > *:last-child,
+.imessage div > *:last-child,
+.imessage p > *:last-child {
   margin-bottom: 0 !important;
 }

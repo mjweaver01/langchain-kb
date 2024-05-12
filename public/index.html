@@ -42,7 +42,7 @@
         <div class="clear" v-if="messages.length > 0" @click="clearConversation">Clear conversation</div>
         <div class="current-message">
           <div class="ask-question">
-            <form @submit.prevent="ask">
+            <form @submit.prevent="ask()">
               <input name="question" placeholder="Ask anything..." v-model="question"/>
               <button type="submit">Ask</button>
             </form>
@@ -76,8 +76,8 @@
         }
       },
       methods: {
-        async ask (sentQuestion) {
-          const question = sentQuestion?.trim() !== '' ? sentQuestion : this.question.trim() !== '' ? this.question : false
+        async ask (sentQuestion = '') {
+          const question = sentQuestion.trim() !== '' ? sentQuestion.trim() : this.question.trim() !== '' ? this.question.trim()  : false
           if(question === false) return
 
           this.loading = true
