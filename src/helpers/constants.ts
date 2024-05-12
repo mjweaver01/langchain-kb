@@ -54,3 +54,12 @@ export const defaultHeaders = {
 }
 
 export const FIVE_MINUTES = 5 * 60 * 1000
+
+export const defaultQuestions = [
+  'How can i best use the Reactive Method in my workout routines?',
+  'What is the Conjugate Method?',
+  'What is the reverse hyper invented for? How is it best used?',
+  'Who is Louie Simmons? What is he best known for?',
+  'Give me the best powerlifting routine as a newcomer to the powerlifting world',
+  'What advice would Louie give to a powerlifer struggling to improve their numbers?',
+]

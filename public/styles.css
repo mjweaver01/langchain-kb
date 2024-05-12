@@ -8,6 +8,13 @@
   --black: #000;
   --white: #fff;
   --transparent: rgba(255, 255, 255, 0);
+  --gradient: radial-gradient(
+      circle farthest-corner at 100% 50%,
+      var(--light-blue),
+      var(--transparent)
+    ),
+    radial-gradient(circle farthest-corner at 0% 100%, #fff 6%, rgba(255, 255, 255, 0)),
+    radial-gradient(circle farthest-corner at 50% 50%, whitesmoke, rgba(219, 219, 219, 0));
 }
 
 * {
@@ -83,17 +90,11 @@ button:hover {
   background: var(--dark-blue);
 }
 
-body {
+body,
+.qna {
   margin: 0;
   padding: 0;
-  background-image: radial-gradient(
-      circle farthest-corner at 100% 50%,
-      var(--light-blue),
-      var(--transparent)
-    ),
-    radial-gradient(circle farthest-corner at 0% 100%, #fff 6%, rgba(255, 255, 255, 0)),
-    radial-gradient(circle farthest-corner at 50% 50%, whitesmoke, rgba(219, 219, 219, 0));
-  background-position: 0 0, 0 0, 0 0, 0 0;
+  background-image: var(--gradient);
   background-size: auto, auto, auto, 160px;
 }
 
@@ -126,23 +127,12 @@ a {
   max-width: 600px;
 }
 
-#services {
-  display: grid;
-  gap: 1rem;
-  margin-bottom: 2rem;
+.qna {
+  padding: 1em;
+  border-radius: 10px;
+  box-shadow: 1px 5px 10px var(--dark-blue);
 }
 
-#services p {
+.no-margin {
   margin: 0;
-}
-
-#services strong {
-  font-weight: 500;
-  margin-left: 0.5rem;
-}
-
-@media (min-width: 500px) {
-  #services {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }

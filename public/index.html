@@ -11,35 +11,39 @@
   <body>
     <div id="app">
       <h1>🦜🔗 Knowledge Base</h1>
-      <p>A knowledge base from the provided URL in the constants file.</p>
-      <div>
-        You can post to
-        <pre>/ask-kb</pre>
-        with an object containing a
-        <pre>question</pre>
+      <p>A knowledge base from a <a href="https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml" target="_blank">provided sitemap</a>.</p>
+      <div class="qna">
+        <h2 class="no-margin">Usage</h2>
+        <div>
+          You can post to
+          <pre>/ask-kb</pre>
+          with an object containing a
+          <pre>question</pre>
+        </div>
+        <div>
+          You can also include a
+          <pre>conversationId</pre>
+          to continue a conversation
+        </div>
+        <br>
+        <div id="question">
+          <form id="form">
+            <textarea id="question-input" name="question" placeholder="Ask anything..."></textarea>
+            <button type="submit" id="ask">Ask</button>
+          </form>
+        </div>
+        <div id="answer"></div>
       </div>
-      <div>
-        You can also include a
-        <pre>conversationId</pre>
-        to continue a conversation
-      </div>
-      <br>
-      <div id="question">
-        <form id="form">
-          <textarea id="question-input" name="question" placeholder="Ask anything..."></textarea>
-          <button type="submit" id="ask">Ask</button>
-        </form>
-      </div>
-      <div id="answer"></div>
     </div>
   </body>
 
   <script>
     const app = document.getElementById('app')
-    async function askMoby(q) {
-      const question = q.length > 0 ? q : 'What is the Conjugate Method?'
+    async function ask(q) {
+      const question = q.length > 0 ? q : false
+      if(!question) return false
 
-      document.getElementById('answer').innerHTML = `<h2>Asking: "${question}"</h2>
+      document.getElementById('answer').innerHTML = `<h2><i>Asking: "${question}"</i></h2>
       <p>Please be patient; sometimes this takes 5-10 seconds to reply..</p>
       `
 
@@ -63,10 +67,10 @@
 
             if (parsedData.answer) {
               const d1 = document.createElement('div')
-              d1.innerHTML += `<h2>"${question}"</h2>`
+              d1.innerHTML += `<h2><i>"${question}"</i></h2>`
 
               const d2 = document.createElement('div')
-              d2.innerHTML = parsedData.answer.output ?? parsedData.answer
+              d2.innerHTML = `<p>${parsedData.answer.output ?? parsedData.answer}</p>`
               document.getElementById('answer').innerHTML = `${d1.innerHTML}${d2.innerHTML}${
                 parsedData.isCached
                   ? `<p><i>Last updated ${parseInt(
@@ -80,18 +84,14 @@
       Array.from(form.elements).forEach((formElement) => (formElement.disabled = false))
     }
 
-    // ask moby on form submit
+    // ask on form submit
     document.getElementById('form').addEventListener('submit', async (e) => {
       e.preventDefault()
       e.stopPropagation()
       const question = document.getElementById('question-input').value
-      await askMoby(question)
+      await ask(question)
     })
-
-    // ask one time for the one time
-    document.getElementById('ask').click()
   </script>
-</html>
 </html>
 
 
