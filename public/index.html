@@ -5,7 +5,9 @@
     <title>Knowledge Base</title>
     <link rel="icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/imessage.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
 
   <body>
@@ -26,71 +28,85 @@
           to continue a conversation
         </div>
         <br>
-        <div id="question">
-          <form id="form">
-            <textarea id="question-input" name="question" placeholder="Ask anything..."></textarea>
-            <button type="submit" id="ask">Ask</button>
-          </form>
+        <div class="imessage" v-if="messages.length > 0">
+          <p v-for="message in messages" v-bind:class="{ 'from-me': message.isUser, 'from-them': !message.isUser }">
+            {{ message.text.output ?? message.text }}
+          </p>
+          <p v-if="loading" class="from-them">. . .</p>
         </div>
-        <div id="answer"></div>
+        <div class="current-message">
+          <div class="question">
+            <form @submit.prevent="ask">
+              <textarea name="question" placeholder="Ask anything..." v-model="question"></textarea>
+              <button type="submit">Ask</button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </body>
 
   <script>
-    const app = document.getElementById('app')
-    async function ask(q) {
-      const question = q.length > 0 ? q : false
-      if(!question) return false
+    const { createApp } = Vue
 
-      document.getElementById('answer').innerHTML = `<h2><i>Asking: "${question}"</i></h2>
-      <p>Please be patient; sometimes this takes 5-10 seconds to reply..</p>
-      `
+    createApp({
+      data() {
+        return {
+          messages: [],
+          loading: false,
+          conversationId: '',
+          question: 'who is louie'
+        }
+      },
+      methods: {
+        async ask () {
+          console.log('hi', this.question)
+          const question = this.question.trim() !== '' ? this.question : false
+          console.log(question)
+          if(question === false) return
 
-      const form = document.getElementById('form')
-      Array.from(form.elements).forEach((formElement) => (formElement.disabled = true))
+          this.loading = true
 
-      await fetch(`/ask-kb${window.location.search}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          question,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          try {
-            const parsedData = JSON.parse(JSON.stringify(data))
-            console.log(parsedData)
+          this.messages.push({
+            text: question,
+            isUser: true
+          })
 
-            if (parsedData.answer) {
-              const d1 = document.createElement('div')
-              d1.innerHTML += `<h2><i>"${question}"</i></h2>`
+          await fetch(`/ask-kb${window.location.search}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              question,
+              conversationId: this.conversationId
+            }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              try {
+                const parsedData = JSON.parse(JSON.stringify(data))
+                console.log(parsedData)
 
-              const d2 = document.createElement('div')
-              d2.innerHTML = `<p>${parsedData.answer.output ?? parsedData.answer}</p>`
-              document.getElementById('answer').innerHTML = `${d1.innerHTML}${d2.innerHTML}${
-                parsedData.isCached
-                  ? `<p><i>Last updated ${parseInt(
-                      Math.abs((new Date() - new Date(parseInt(parsedData.time))) / 60000),
-                    )} minutes ago</i></p>`
-                  : ''
-              }`
-            }
-          } catch {}
-        })
-      Array.from(form.elements).forEach((formElement) => (formElement.disabled = false))
-    }
+                if(parsedData.conversationId) this.conversationId = parsedData.conversationId
 
-    // ask on form submit
-    document.getElementById('form').addEventListener('submit', async (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      const question = document.getElementById('question-input').value
-      await ask(question)
-    })
+                if (parsedData.answer) {
+                  this.messages.push({
+                    ...parsedData,
+                    text: parsedData.answer,
+                    isCached: parsedData.isCached || false,
+                    time: parsedData.time || false
+                  })
+                }
+
+                this.question = ''
+              } catch {} finally {
+                this.loading = false
+              }
+            })
+        }
+      }
+    }).mount('#app')
   </script>
 </html>
 
