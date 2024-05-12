@@ -45,7 +45,7 @@
         <div class="current-message">
           <div class="question">
             <form @submit.prevent="ask">
-              <input @keyup.enter="ask" name="question" placeholder="Ask anything..." v-model="question"/>
+              <input name="question" placeholder="Ask anything..." v-model="question"/>
               <button type="submit">Ask</button>
             </form>
           </div>
