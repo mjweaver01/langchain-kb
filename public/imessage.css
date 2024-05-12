@@ -115,4 +115,19 @@ p[class^='from-'].emoji::before {
 .imessage section > * {
   margin-top: 0 !important;
   margin-bottom: 1rem !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+.imessage section > ul {
+  padding-left: 1em !important;
+}
+
+.imessage h2 {
+  font-size: 1.5em;
+}
+
+.imessage section > *:last-child {
+  margin-bottom: 0 !important;
 }
