@@ -66,6 +66,7 @@
           if(question === false) return
 
           this.loading = true
+          this.scrollToBottom()
 
           this.messages.push({
             text: question,
@@ -103,11 +104,15 @@
               } catch {} finally {
                 this.loading = false
                 
-                this.$nextTick(() => {
-                  document.getElementById('app').scrollTop = document.getElementById('imessage').scrollHeight;
-                })
+                this.scrollToBottom()
               }
             })
+        },
+
+        scrollToBottom() {
+          this.$nextTick(() => {
+            document.getElementById('app').scrollTop = document.getElementById('imessage').scrollHeight;
+          })
         }
       }
     }).mount('#app')
