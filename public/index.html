@@ -6,6 +6,7 @@
     <link rel="icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/imessage.css" />
+    <link rel="stylesheet" href="/loading.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
@@ -31,7 +32,14 @@
           <p v-for="message in messages" v-bind:class="{ 'from-me': message.isUser, 'from-them': !message.isUser }">
             {{ message.text.output ?? message.text }}
           </p>
-          <p v-if="loading" class="from-them">. . .</p>
+          <p v-if="loading" class="from-them loading-message">
+            <span class="loading">
+              <span class="dot one"></span>
+              <span class="dot two"></span>
+              <span class="dot three"></span>
+            </span>
+            <span class="tail"></span>
+          </p>
           <div id="bottom"></div>
         </div>
         <div class="current-message">
