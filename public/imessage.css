@@ -111,3 +111,8 @@ p[class^='from-'].emoji::before {
 .margin-t_one {
   margin-top: 1rem !important;
 }
+
+.imessage section > * {
+  margin-top: 0 !important;
+  margin-bottom: 1rem !important;
+}
