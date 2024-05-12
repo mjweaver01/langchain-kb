@@ -168,16 +168,26 @@ a {
 
 .questions {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
   grid-gap: 1em;
   margin-bottom: 2em;
 }
 
 .question {
-  padding: 0.5em;
+  padding: 1em;
   border-radius: 5px;
   border: 1px solid var(--blue);
   cursor: pointer;
+}
+
+@media (min-width: 500px) {
+  .questions {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .question {
+    padding: 0.5em;
+  }
 }
 
 .question:hover {
