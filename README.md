@@ -4,6 +4,8 @@
 
 Currently using [Westside Barbell's Shopify Blog Sitemap](https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml)
 
+<img src="./readme.png" />
+
 [Live Demo](https://langchain-kb.onrender.com/)
 
 ## 🏁 Quickstart
