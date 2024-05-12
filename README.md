@@ -1,6 +1,8 @@
-# 🦜🔗 langchain-kb
+# 🦜🔗 Langchain Sitemap Knowledge Base
 
-Creating enhanced agents with Langchain and Langfuse.
+> A Knowledge Base Chatbot, pre-trained on blogs from sitemap XML – Powered by Langchain and Langfuse
+
+Currently using [Westside Barbell's Shopify Blog Sitemap](https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml)
 
 [Live Demo](https://langchain-kb.onrender.com/)
 
