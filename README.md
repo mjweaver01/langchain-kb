@@ -8,7 +8,9 @@ Powered by [Langchain](https://js.langchain.com/) and [Langfuse](https://langfus
 
 [Live Demo](https://langchain-kb.onrender.com/)
 
-<img src="./readme.png" />
+|                   |                    |
+| :---------------: | :----------------: |
+| ![](./readme.png) | ![](./readme2.png) |
 
 ## 🏁 Quickstart
 
