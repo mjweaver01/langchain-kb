@@ -1,5 +1,4 @@
 import { supabase } from './supabase'
-import { FIVE_MINUTES } from './constants'
 import loggy from './loggy'
 
 export const getCache = async (context: string, time: number, question?: any) => {

@@ -7,14 +7,12 @@ import { SitemapLoader } from 'langchain/document_loaders/web/sitemap'
 import langfuse from './langfuse'
 import {
   sitemapUrl,
-  defaultShopId,
   wikipediaPrompt,
   sitemapPrompt,
   gistSystemPrompt,
   kbSystemPrompt,
   systemPrompt,
 } from './constants'
-import loggy from './loggy'
 
 const generatePromptTemplate = (sentPrompt: string) =>
   ChatPromptTemplate.fromMessages([
@@ -24,8 +22,8 @@ const generatePromptTemplate = (sentPrompt: string) =>
     new MessagesPlaceholder('agent_scratchpad'),
   ])
 
-const systemPrompt = await langfuse.getPrompt('System_Prompt')
-const compiledSystemPrompt = systemPrompt.prompt ? systemPrompt.prompt : systemPrompt
+const remoteSystemPrompt = await langfuse.getPrompt('System_Prompt')
+const compiledSystemPrompt = remoteSystemPrompt.prompt ? remoteSystemPrompt.prompt : systemPrompt
 const kbPrompt = await langfuse.getPrompt('KB_SYSTEM_PROMPT')
 const compiledKbSystemPrompt = kbPrompt.prompt ? kbPrompt.prompt : kbSystemPrompt
 export const gptSystemPromptTemplate = generatePromptTemplate(compiledSystemPrompt)
@@ -55,8 +53,9 @@ const knowledgeBaseLoader = new DynamicTool({
         completionStartTime: new Date(),
       })
 
-      const loader = new SitemapLoader(sitemapXml)
-      const result = await loader.load()
+      const loader = new SitemapLoader(sitemapUrl)
+      const docs = await loader.load()
+      const result = JSON.stringify(docs[0])
 
       generation.end({
         output: JSON.stringify(result),
