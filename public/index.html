@@ -17,18 +17,6 @@
         <h1>🦜🔗 Knowledge Base</h1>
         <p>A knowledge base from a <a href="https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml" target="_blank">provided sitemap</a>:
           Westside Barbell's <a href="https://westside-barbell.com/blogs/the-blog/" target="_blank">Shopify Blog</a>.</p>
-        <h2>Usage</h2>
-        <div class="p">
-          You can post to
-          <pre>/ask-kb</pre>
-          with an object containing a
-          <pre>question</pre>
-        </div>
-        <div class="p">
-          You can also include a
-          <pre>conversationId</pre>
-          to continue a conversation
-        </div>
         <div id="imessage" class="imessage" v-if="messages.length > 0">
           <p v-for="message in messages" v-bind:class="{ 'from-me': message.isUser, 'from-them': !message.isUser }">
             {{ message.text.output ?? message.text }}
