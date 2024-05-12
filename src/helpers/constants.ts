@@ -66,4 +66,5 @@ export const defaultQuestions = [
   'Who is Louie Simmons? What is he best known for?',
   'Give me the best powerlifting routine as a newcomer to the powerlifting world',
   'What advice would Louie give to a powerlifer struggling to improve their numbers?',
+  'Give me a workout louie would have loved',
 ]

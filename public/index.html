@@ -18,8 +18,11 @@
         <p>A knowledge base from a <a href="https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml" target="_blank">provided sitemap</a>:
           Westside Barbell's <a href="https://westside-barbell.com/blogs/the-blog/" target="_blank">Shopify Blog</a>.</p>
         <div id="imessage" class="imessage" v-if="messages.length > 0">
-          <p v-for="message in messages" v-bind:class="{ 'from-me': message.isUser, 'from-them': !message.isUser }">
-            {{ message.text.output ?? message.text }}
+          <p 
+            v-for="message in messages" 
+            v-bind:class="{ 'from-me': message.isUser, 'from-them': !message.isUser }" 
+            v-html="sanitizeMessage(message.text.output ?? message.text)"
+          >
           </p>
           <p v-if="loading" class="from-them loading-message">
             <span class="loading">
@@ -120,6 +123,10 @@
         clearConversation() {
           this.messages = []
           this.question = ''
+        },
+
+        sanitizeMessage(message) {
+          return message.replace('```html', '').replace('```', '').trim()
         }
       }
     }).mount('#app')
