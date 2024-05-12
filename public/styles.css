@@ -19,6 +19,7 @@
 
 * {
   font-family: Inter, sans-serif;
+  box-sizing: border-box;
 }
 
 pre {
@@ -48,7 +49,8 @@ h3 {
   font-size: 1.5em;
 }
 
-p {
+p,
+.p {
   margin-bottom: 2rem;
 }
 
@@ -56,6 +58,7 @@ pre {
   display: inline-block;
   color: white;
   background: black;
+  margin: 0;
 }
 
 form {
@@ -123,16 +126,36 @@ a {
 
 #app {
   margin: 0 auto;
-  width: 80%;
+  padding: 1em;
   max-width: 600px;
 }
-
 .qna {
   padding: 1em;
-  border-radius: 10px;
-  box-shadow: 1px 5px 10px var(--dark-blue);
 }
 
-.no-margin {
-  margin: 0;
+@media (min-width: 500px) {
+  .qna {
+    border-radius: 10px;
+    box-shadow: 1px 5px 10px var(--dark-blue);
+  }
+}
+
+@media (max-width: 499px) {
+  #app {
+    max-height: calc(100vh - 52px);
+    overflow: scroll;
+    padding: 0;
+  }
+
+  .imessage {
+    margin: 0 !important;
+  }
+
+  .current-message {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0.5em;
+  }
 }

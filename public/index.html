@@ -12,32 +12,32 @@
 
   <body>
     <div id="app">
-      <h1>🦜🔗 Knowledge Base</h1>
-      <p>A knowledge base from a <a href="https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml" target="_blank">provided sitemap</a>.</p>
       <div class="qna">
-        <h2 class="no-margin">Usage</h2>
-        <div>
+        <h1>🦜🔗 Knowledge Base</h1>
+        <p>A knowledge base from a <a href="https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml" target="_blank">provided sitemap</a>.</p>
+        <h2>Usage</h2>
+        <div class="p">
           You can post to
           <pre>/ask-kb</pre>
           with an object containing a
           <pre>question</pre>
         </div>
-        <div>
+        <div class="p">
           You can also include a
           <pre>conversationId</pre>
           to continue a conversation
         </div>
-        <br>
-        <div class="imessage" v-if="messages.length > 0">
+        <div id="imessage" class="imessage" v-if="messages.length > 0">
           <p v-for="message in messages" v-bind:class="{ 'from-me': message.isUser, 'from-them': !message.isUser }">
             {{ message.text.output ?? message.text }}
           </p>
           <p v-if="loading" class="from-them">. . .</p>
+          <div id="bottom"></div>
         </div>
         <div class="current-message">
           <div class="question">
             <form @submit.prevent="ask">
-              <textarea name="question" placeholder="Ask anything..." v-model="question"></textarea>
+              <input @keyup.enter="ask" name="question" placeholder="Ask anything..." v-model="question"/>
               <button type="submit">Ask</button>
             </form>
           </div>
@@ -55,7 +55,7 @@
           messages: [],
           loading: false,
           conversationId: '',
-          question: 'who is louie'
+          question: 'Who is Louie?'
         }
       },
       methods: {
@@ -102,6 +102,10 @@
                 this.question = ''
               } catch {} finally {
                 this.loading = false
+                
+                this.$nextTick(() => {
+                  document.getElementById('app').scrollTop = document.getElementById('imessage').scrollHeight;
+                })
               }
             })
         }
