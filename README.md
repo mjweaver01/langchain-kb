@@ -1,6 +1,6 @@
 # 🦜🔗 Langchain Sitemap Knowledge Base
 
-> A knowledgebase chatbot, pre-trained on blogs from sitemap XML – and some prompt engineering 😉
+> A knowledge base chatbot, pre-trained on blogs from sitemap XML
 
 – Powered by [Langchain](https://js.langchain.com/) and [Langfuse](https://langfuse.com)
 
