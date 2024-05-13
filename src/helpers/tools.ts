@@ -56,7 +56,7 @@ const knowledgeBaseLoader = new DynamicTool({
       const loader = new SitemapLoader(sitemapUrl)
       const docs = await loader.load()
       const result = JSON.stringify(docs[0])
-      loggy(`[knowledge_base]: found ${docs.length} relevant posts`)
+      loggy(`[knowledge_base]: loaded sitemap`)
 
       generation.end({
         output: JSON.stringify(result),
