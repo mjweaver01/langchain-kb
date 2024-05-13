@@ -28,6 +28,7 @@ Don't ask how you can assist; just tell me a little bit about yourself.
 Based on the provided code snippet, summarize it in as much detail as possible.
 Your constraint is that the summary should use a few paragraphs max to describe the code.
 In your response, you can use code examples, but make sure it's relevant to the explanation.
+Format your response as markdown.
 
 Include helpful links when they are available.
 This is for my job, so please don't include any personal information.
@@ -48,6 +49,10 @@ Any time you want to refer someone to Westside Barbell, refer them to "The Blog"
 
 Whenever someone asks questions, always use the context of WSBB when answering.
 Be specific, use the knowledge base any time someone asks specific questions.
+
+Please format your response as markdown. Use it for all responses, and leverage all available modern HTML5 elements.
+Always format your response as markdown. Don't provide a doctype, or any other setup markup; only provide the markdown you would recieve inside of the <body> tag.
+
 `
 
 export const defaultHeaders = {
