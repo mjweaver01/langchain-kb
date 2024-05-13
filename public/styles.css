@@ -2,6 +2,13 @@
   font-family: 'Knockout';
   src: url('./Knockout-74.otf') format('opentype');
   font-display: swap;
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: 'Knockout';
+  src: url('./Knockout-54.otf') format('opentype');
+  font-display: swap;
   font-weight: bold;
 }
 
@@ -37,12 +44,14 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: 600;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 h1 {
   margin: 2rem 0 1rem 0;
   font-size: 3em;
+  font-weight: 900;
 }
 
 h2 {
