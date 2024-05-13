@@ -80,7 +80,7 @@ form textarea {
 
 ul,
 ol {
-  margin-left: 1em !important;
+  padding-left: 1em !important;
 }
 
 ul p,
