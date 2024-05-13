@@ -63,8 +63,15 @@ pre {
 
 form {
   width: 100%;
-  display: flex;
-  gap: 1em;
+  display: grid;
+  grid-template-columns: auto 75px;
+  gap: 0.5em;
+}
+
+@media (min-width: 500px) {
+  form {
+    gap: 1em;
+  }
 }
 
 form textarea {
@@ -103,8 +110,7 @@ button:hover {
   background: var(--dark-blue);
 }
 
-body,
-.qna {
+body {
   margin: 0;
   padding: 0;
   background-image: var(--gradient);
@@ -136,25 +142,22 @@ a {
 
 #app {
   margin: 0 auto;
-  padding: 1em;
   max-width: 600px;
-}
-.qna {
   padding: 1em;
-}
-
-@media (min-width: 500px) {
-  .qna {
-    border-radius: 10px;
-    box-shadow: 1px 5px 10px var(--dark-blue);
-  }
 }
 
 @media (max-width: 499px) {
   #app {
-    max-height: calc(100vh - 52px);
-    overflow: scroll;
+    display: flex;
+    flex-flow: column;
+    height: 100vh;
     padding: 0;
+  }
+
+  .top {
+    flex-grow: 1;
+    overflow: scroll;
+    padding: 1em;
   }
 
   .imessage {
@@ -162,10 +165,6 @@ a {
   }
 
   .current-message {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
     padding: 0.5em;
   }
 }
@@ -173,6 +172,7 @@ a {
 .clear {
   color: rgb(106, 106, 106);
   font-size: 0.9em;
+  margin-bottom: 2px;
   cursor: pointer;
 }
 

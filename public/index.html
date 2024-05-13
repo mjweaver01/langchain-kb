@@ -14,22 +14,28 @@
 
   <body>
     <div id="app">
-      <div class="qna">
+      <div class="top">
         <h1>🏋️ WSBB Knowledge Base</h1>
-        <p>A GPT-based AI chat, pretrained on a <a href="https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml" target="_blank">provided sitemap</a>:
-          Westside Barbell's <a href="https://westside-barbell.com/blogs/the-blog/" target="_blank">Shopify Blog</a>.</p>
+        <p>
+          A GPT-based AI chat, pretrained on a
+          <a
+            href="https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml"
+            target="_blank"
+            >provided sitemap</a
+          >: Westside Barbell's
+          <a href="https://westside-barbell.com/blogs/the-blog/" target="_blank">Shopify Blog</a>.
+        </p>
         <div class="questions" v-if="messages.length <= 0">
           <div class="question" v-for="question in defaultQuestions" @click="ask(question)">
             {{ question }}
           </div>
         </div>
         <div id="imessage" class="imessage" v-if="messages.length > 0">
-          <p 
-            v-for="message in messages" 
-            v-bind:class="{ 'from-me': message.isUser, 'from-them': !message.isUser }" 
+          <p
+            v-for="message in messages"
+            v-bind:class="{ 'from-me': message.isUser, 'from-them': !message.isUser }"
             v-html="sanitizeMessage(message.text.output ?? message.text)"
-          >
-          </p>
+          ></p>
           <p v-if="loading" class="from-them loading-message">
             <span class="loading">
               <span class="dot one"></span>
@@ -40,14 +46,21 @@
           </p>
           <div id="bottom"></div>
         </div>
-        <div class="current-message">
-          <div class="clear" v-if="messages.length > 0" @click="clearConversation">Clear conversation</div>
-          <div class="ask-question">
-            <form @submit.prevent="ask()">
-              <input id="question-input" name="question" placeholder="Ask anything..." v-model="question"/>
-              <button type="submit">Ask</button>
-            </form>
-          </div>
+      </div>
+      <div class="current-message">
+        <div class="clear" v-if="messages.length > 0" @click="clearConversation">
+          Clear conversation
+        </div>
+        <div class="ask-question">
+          <form @submit.prevent="ask()">
+            <input
+              id="question-input"
+              name="question"
+              placeholder="Ask anything..."
+              v-model="question"
+            />
+            <button type="submit">Ask</button>
+          </form>
         </div>
       </div>
     </div>
@@ -72,15 +85,20 @@
             'Give me the best powerlifting routine for a newcomer to the sport',
             'What advice would Louie give to a powerlifer struggling to improve their numbers?',
             'Give me a workout Louie would have loved',
-            'Should I wear knee sleeves or wraps when squatting?'
+            'Should I wear knee sleeves or wraps when squatting?',
           ],
-          converter: new showdown.Converter()
+          converter: new showdown.Converter(),
         }
       },
       methods: {
-        async ask (sentQuestion = '') {
-          const question = sentQuestion.trim() !== '' ? sentQuestion.trim() : this.question.trim() !== '' ? this.question.trim()  : false
-          if(question === false) return
+        async ask(sentQuestion = '') {
+          const question =
+            sentQuestion.trim() !== ''
+              ? sentQuestion.trim()
+              : this.question.trim() !== ''
+              ? this.question.trim()
+              : false
+          if (question === false) return
 
           this.loading = true
           this.scrollToBottom()
@@ -88,7 +106,7 @@
 
           this.messages.push({
             text: question,
-            isUser: true
+            isUser: true,
           })
 
           await fetch(`/ask-kb${window.location.search}`, {
@@ -98,19 +116,19 @@
             },
             body: JSON.stringify({
               question,
-              conversationId: this.conversationId
+              conversationId: this.conversationId,
             }),
           })
             .then((res) => res.json())
             .then((data) => {
               try {
-                const parsedData = JSON.parse(JSON.stringify(data)) 
+                const parsedData = JSON.parse(JSON.stringify(data))
 
                 if (parsedData.answer) {
-                  if(parsedData.answer.conversationId) {
+                  if (parsedData.answer.conversationId) {
                     this.conversationId = parsedData.answer.conversationId
                   }
-                  
+
                   this.messages.push({
                     ...parsedData,
                     text: parsedData.answer,
@@ -120,9 +138,10 @@
                 }
 
                 this.question = ''
-              } catch {} finally {
+              } catch {
+              } finally {
                 this.loading = false
-                
+
                 this.scrollToBottom()
               }
             })
@@ -131,7 +150,7 @@
         scrollToBottom() {
           this.$nextTick(() => {
             document.getElementById('question-input').focus()
-            this.$el.scrollTop = this.$el.scrollHeight;
+            this.$el.scrollTop = this.$el.scrollHeight
           })
         },
 
@@ -144,10 +163,8 @@
 
         sanitizeMessage(message) {
           return this.converter.makeHtml(message)
-        }
-      }
+        },
+      },
     }).mount('#app')
   </script>
 </html>
-
-
