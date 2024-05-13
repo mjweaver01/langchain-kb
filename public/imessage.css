@@ -1,22 +1,25 @@
 /* forked from https://codepen.io/AllThingsSmitty/pen/jommGQ */
 .imessage {
-  background-color: #fff;
-  border: 1px solid #e5e5ea;
-  border-radius: 0.25rem;
   display: flex;
   flex-direction: column;
   margin: 0 auto 1rem;
   max-width: 600px;
-  padding: 0.5rem 1.5rem;
+  padding: 0;
 }
 
 .imessage p {
   border-radius: 1.15rem;
   line-height: 1.25;
-  max-width: 75%;
+  max-width: 90%;
   padding: 0.5rem 0.875rem;
   position: relative;
   word-wrap: break-word;
+}
+
+@media (min-width: 500px) {
+  .imessage p {
+    max-width: 75%;
+  }
 }
 
 .imessage p::before,

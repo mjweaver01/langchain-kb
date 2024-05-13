@@ -2,20 +2,12 @@
 
 :root {
   --mobile: 768px;
-  --blue: #0c70f2;
+  --blue: #306cf4;
   --light-blue: #dbe8f7;
-  --dark-blue: #0a5ec4;
+  --dark-blue: #1d2024;
   --black: #000;
   --white: #fff;
   --transparent: rgba(255, 255, 255, 0);
-  --gradient: radial-gradient(
-      circle farthest-corner at 100% 50%,
-      var(--light-blue),
-      var(--transparent)
-    ),
-    radial-gradient(circle farthest-corner at 0% 100%, #fff 6%, rgba(255, 255, 255, 0)),
-    radial-gradient(circle farthest-corner at 50% 50%, whitesmoke, rgba(219, 219, 219, 0));
-}
 
 * {
   font-family: Inter, sans-serif;
@@ -102,9 +94,13 @@ button {
   appearance: none;
   padding: 1em;
   background: var(--white);
-  border: 1px solid var(--blue);
+  border: 1px solid var(--dark-blue);
   border-radius: 5px;
   width: 100%;
+}
+
+input:focus, textarea:focus, button:focus {
+  border-color: var(--blue);
 }
 
 button {
@@ -115,13 +111,12 @@ button {
 
 button:hover {
   background: var(--dark-blue);
+  border-color: var(--dark-blue);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-image: var(--gradient);
-  background-size: auto, auto, auto, 160px;
 }
 
 nav {
@@ -193,7 +188,7 @@ a {
 .question {
   padding: 1em;
   border-radius: 5px;
-  border: 1px solid var(--blue);
+  border: 1px solid var(--dark-blue);
   cursor: pointer;
 }
 
@@ -209,4 +204,5 @@ a {
 
 .question:hover {
   box-shadow: 1px 5px 10px var(--blue);
+  border-color: var(--blue);
 }
