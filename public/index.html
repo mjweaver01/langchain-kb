@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Knowledge Base</title>
+    <title>WSBB Knowledge Base</title>
     <link rel="icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/imessage.css" />
@@ -15,8 +15,8 @@
   <body>
     <div id="app">
       <div class="qna">
-        <h1>🦜🔗 Knowledge Base</h1>
-        <p>A knowledge base from a <a href="https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml" target="_blank">provided sitemap</a>:
+        <h1>🦜🔗🏋️ WSBB Knowledge Base</h1>
+        <p>A knowledge base AI chat, pretrained on a <a href="https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml" target="_blank">provided sitemap</a>:
           Westside Barbell's <a href="https://westside-barbell.com/blogs/the-blog/" target="_blank">Shopify Blog</a>.</p>
         <div class="questions" v-if="messages.length <= 0">
           <div class="question" v-for="question in defaultQuestions" @click="ask(question)">
