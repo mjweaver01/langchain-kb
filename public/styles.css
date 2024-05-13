@@ -1,4 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@font-face {
+  font-family: 'Knockout';
+  src: url('./Knockout-74.otf') format('opentype');
+  font-display: swap;
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Knockout';
+  src: url('./Knockout-32.otf') format('opentype');
+  font-display: swap;
+  font-weight: normal;
+}
 
 :root {
   --mobile: 768px;
@@ -8,9 +20,10 @@
   --black: #000;
   --white: #fff;
   --transparent: rgba(255, 255, 255, 0);
+}
 
 * {
-  font-family: Inter, sans-serif;
+  font-family: 'Knockout', sans-serif;
   box-sizing: border-box;
 }
 
@@ -99,7 +112,9 @@ button {
   width: 100%;
 }
 
-input:focus, textarea:focus, button:focus {
+input:focus,
+textarea:focus,
+button:focus {
   border-color: var(--blue);
 }
 
