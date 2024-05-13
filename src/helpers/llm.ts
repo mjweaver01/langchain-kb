@@ -7,7 +7,7 @@ export const llm = () =>
   new ChatOpenAI({
     model: fourOModel,
     openAIApiKey: process.env.OPENAI_API_KEY,
-    temperature: 0.1,
+    temperature: 0,
   })
 
 export const modelWithFunctions = llm().bind({
