@@ -7,7 +7,7 @@ import {
   gistSystemPromptTemplate,
   kbSystemPromptTemplate,
 } from './tools'
-import { modelWithFunctions, newModelWithFunctions } from './llm'
+import { modelWithFunctions } from './llm'
 import { defaultQuestion } from './constants'
 import random from './idGenerator'
 import loggy from './loggy'
@@ -34,7 +34,7 @@ export const ask = async (
     : isGist
     ? gistSystemPromptTemplate
     : gptSystemPromptTemplate
-  const currentModelWithFunctions = isGist ? newModelWithFunctions : modelWithFunctions
+  const currentModelWithFunctions = modelWithFunctions
 
   const { data } = await supabase
     .from('conversations')
