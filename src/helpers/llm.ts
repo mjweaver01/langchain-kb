@@ -1,6 +1,6 @@
 import { ChatOpenAI } from '@langchain/openai'
 import { convertToOpenAIFunction } from '@langchain/core/utils/function_calling'
-import { tools } from './tools'
+import { tools, kbTools } from './tools'
 import { fourOModel } from './constants'
 
 export const llm = () =>
@@ -12,4 +12,8 @@ export const llm = () =>
 
 export const modelWithFunctions = llm().bind({
   functions: tools.map((tool) => convertToOpenAIFunction(tool)),
+})
+
+export const kbModelWithFunctions = llm().bind({
+  functions: kbTools.map((tool) => convertToOpenAIFunction(tool)),
 })

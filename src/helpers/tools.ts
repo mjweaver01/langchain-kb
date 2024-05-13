@@ -1,4 +1,4 @@
-// import { TavilySearchResults } from '@langchain/community/tools/tavily_search'
+import loggy from './loggy'
 import { WikipediaQueryRun } from '@langchain/community/tools/wikipedia_query_run'
 import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts'
 import { Calculator } from '@langchain/community/tools/calculator'
@@ -56,6 +56,7 @@ const knowledgeBaseLoader = new DynamicTool({
       const loader = new SitemapLoader(sitemapUrl)
       const docs = await loader.load()
       const result = JSON.stringify(docs[0])
+      loggy(`[knowledge_base]: found ${docs.length} relevant posts`)
 
       generation.end({
         output: JSON.stringify(result),
@@ -113,6 +114,7 @@ const WikipediaQuery = new DynamicTool({
       })
 
       const result = await wikipediaQuery.call(question)
+      loggy(`[wikipedia] result: ${JSON.stringify(result)}`)
 
       generation.end({
         output: JSON.stringify(result),
