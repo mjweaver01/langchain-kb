@@ -71,6 +71,16 @@ form textarea {
   flex-basis: 200%;
 }
 
+ul,
+ol {
+  margin-left: 1em !important;
+}
+
+ul p,
+ol p {
+  padding: 0 !important;
+}
+
 input,
 textarea,
 button {

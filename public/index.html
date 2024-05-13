@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/loading.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
   </head>
 
   <body>
@@ -72,7 +73,8 @@
             'Give me the best powerlifting routine as a newcomer to the powerlifting world',
             'What advice would Louie give to a powerlifer struggling to improve their numbers?',
             'Give me a workout louie would loved',
-          ]
+          ],
+          converter: new showdown.Converter()
         }
       },
       methods: {
@@ -141,7 +143,7 @@
         },
 
         sanitizeMessage(message) {
-          return message.replace('```html', '').replace('```', '').trim()
+          return this.converter.makeHtml(message)
         }
       }
     }).mount('#app')
