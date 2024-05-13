@@ -224,11 +224,7 @@ a {
 
 @media (min-width: 500px) {
   .questions {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-
-  .question {
-    padding: 0.5em;
+    grid-template-columns: 1fr 1fr;
   }
 }
 

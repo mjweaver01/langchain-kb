@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>WSBB Knowledge Base</title>
+    <title>Louie.ai</title>
     <link rel="icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/imessage.css" />
@@ -15,15 +15,9 @@
   <body>
     <div id="app">
       <div class="top">
-        <h1>🏋️ WSBB Knowledge Base</h1>
+        <h1>🏋️ Louie.ai</h1>
         <p>
-          A GPT-based AI chat, pretrained on the 
-          <a
-            href="https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml"
-            target="_blank"
-            >sitemap</a
-          > of Westside Barbell's
-          <a href="https://westside-barbell.com/blogs/the-blog/" target="_blank">Shopify Blog</a>.
+          A GPT-4-based AI chat, pretrained on Westside Barbell's <a href="https://westside-barbell.com/blogs/the-blog/" target="_blank">Blog</a>.
         </p>
         <div class="questions" v-if="messages.length <= 0">
           <div class="question" v-for="question in defaultQuestions" @click="ask(question)">
@@ -77,6 +71,7 @@
           conversationId: '',
           question: '',
           defaultQuestions: [
+            'Tell me a little bit about yourself',
             'Who is Louie?',
             'Who is Tom to Louie?',
             'How can I best use the Reactive Method in my workout routines?',

@@ -18,17 +18,17 @@
 }
 
 .loading .dot.one {
-  animation: cycleOne 1s ease-in-out infinite;
+  animation: cycleOne 1.25s ease-in-out infinite;
   animation-direction: normal;
 }
 
 .loading .dot.two {
-  animation: cycleTwo 1s ease-in-out infinite;
+  animation: cycleTwo 1.25s ease-in-out infinite;
   animation-direction: normal;
 }
 
 .loading .dot.three {
-  animation: cycleThree 1s ease-in-out infinite;
+  animation: cycleThree 1.25s ease-in-out infinite;
   animation-direction: normal;
 }
 
@@ -72,7 +72,10 @@
   66.6667% {
     background: rgba(150, 150, 150, 0.4);
   }
-  100% {
+  99.998% {
     background: rgba(150, 150, 150, 1);
+  }
+  100% {
+    background: rgba(150, 150, 150, 0.4);
   }
 }
