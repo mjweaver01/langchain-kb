@@ -4,8 +4,8 @@ import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts
 import { Calculator } from '@langchain/community/tools/calculator'
 import { DynamicTool } from '@langchain/community/tools/dynamic'
 import { SitemapLoader } from 'langchain/document_loaders/web/sitemap'
-// import { OpenAIEmbeddings } from '@langchain/openai'
-// import { MemoryVectorStore } from 'langchain/vectorstores/memory'
+import { OpenAIEmbeddings } from '@langchain/openai'
+import { HNSWLib } from '@langchain/community/vectorstores/hnswlib'
 import langfuse from './langfuse'
 import {
   sitemapUrl,
@@ -32,8 +32,8 @@ export const gptSystemPromptTemplate = generatePromptTemplate(compiledSystemProm
 export const gistSystemPromptTemplate = generatePromptTemplate(gistSystemPrompt)
 export const kbSystemPromptTemplate = generatePromptTemplate(compiledKbSystemPrompt)
 
-//@todo put this in supabase
-let kbVectorStore: any
+let hnsw: any
+let docs: any
 const knowledgeBaseLoader = new DynamicTool({
   name: 'knowledge_base',
   description: sitemapPrompt,
@@ -58,52 +58,41 @@ const knowledgeBaseLoader = new DynamicTool({
       })
 
       try {
-        const loader = new SitemapLoader(sitemapUrl)
-        const docs = await loader.load()
-        const limitedDocs = docs.slice(0, 500).map((doc, i) => ({
-          ...doc,
-          metadata: {
-            name: doc.metadata.title ?? doc.metadata.url ?? i,
-            ...doc.metadata,
-            id: i,
-          },
-          pageContent: doc.pageContent, //@todo extract content only,
-        }))
-        const limitedString = JSON.stringify(limitedDocs).substring(0, 100)
-        loggy(`[knowledge_base] loaded sitemap`)
+        const loader = new SitemapLoader(sitemapUrl, {
+          selector: '.article-content', //extract article content only,
+        })
+
+        if (!docs) {
+          docs = await loader.load()
+          loggy(`[knowledge_base] loaded sitemap`)
+        }
+
+        const limitedDocs = docs.filter((d: any) => d.pageContent).slice(0, 50)
+        if (!hnsw) {
+          hnsw = await HNSWLib.fromDocuments(limitedDocs, new OpenAIEmbeddings())
+          loggy(`[knowledge_base] fed vector store`)
+        }
+
+        const retriever = hnsw.asRetriever()
+        const results = await retriever.getRelevantDocuments(question)
+        let resultDoc: any
+        loggy(`[knowledge_base] queried the vector store`)
+
+        if (results.length > 0) {
+          loggy(`[knowledge_base] found results`)
+          resultDoc = docs.find((doc: any) => doc.metadata.url === results[0].url)
+        }
 
         generation.end({
-          output: limitedString,
+          output: results[0].title,
           level: 'DEFAULT',
         })
 
         trace.update({
-          output: limitedString,
+          output: results[0].title,
         })
 
-        return JSON.stringify(limitedDocs)
-
-        // try {
-        //   if (!kbVectorStore) {
-        //     kbVectorStore = await MemoryVectorStore.fromTexts(
-        //       // @NOTE: we need to slice the docs array to avoid out of memory error
-        //       limitedDocs.map((doc) =>
-        //         JSON.stringify(doc.pageContent }),
-        //       ),
-        //       new OpenAIEmbeddings(),
-        //     )
-        //     loggy(`[knowledge_base] fed vector store`)
-        //   }
-
-        //   const result = await kbVectorStore.similaritySearch(JSON.stringify(question), 1)
-        //   loggy(`[knowledge_base] queried the vector store`)
-
-        //   return limitedDocs
-        // } catch (error) {
-        //   console.log(error)
-        //   loggy(`[knowledge_base] error in vector store`)
-        //   return limitedDocs
-        // }
+        return JSON.stringify(resultDoc || results[0])
       } catch (error) {
         loggy(`[knowledge_base] error in the sitemap`)
         throw error
