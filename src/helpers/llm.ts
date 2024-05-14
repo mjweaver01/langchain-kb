@@ -3,9 +3,9 @@ import { convertToOpenAIFunction } from '@langchain/core/utils/function_calling'
 import { tools, kbTools } from './tools'
 import { fourOModel, threeModel } from './constants'
 
-export const llm = (newModal: boolean = false) =>
+export const llm = (newModel: boolean = false) =>
   new ChatOpenAI({
-    model: newModal ? fourOModel : threeModel,
+    model: newModel ? fourOModel : threeModel,
     openAIApiKey: process.env.OPENAI_API_KEY,
     temperature: 0,
   })
