@@ -21,7 +21,7 @@ export const vector = async (question: string) => {
     let d = docs
       .filter((d: any) => d.pageContent && d.metadata)
       .filter((d: any) => JSON.stringify(d)?.indexOf(question) >= 1)
-      .slice(0, 5)
+      .slice(0, 10)
 
     if (d.length === 0) {
       const qArray = question.split(' ').filter((v) => v.length > 2)
@@ -32,16 +32,23 @@ export const vector = async (question: string) => {
             (v) => d.metadata.title?.indexOf(v) >= 1 || d.metadata.description?.indexOf(v) >= 1,
           ),
         )
-        .slice(0, 5)
+        .slice(0, 10)
     }
 
-    const hnsw = await HNSWLib.fromDocuments(d, new OpenAIEmbeddings())
+    const hnsw = await HNSWLib.fromDocuments(
+      d,
+      new OpenAIEmbeddings({
+        model: 'text-embedding-3-large',
+        apiKey: process.env.OPENAI_API_KEY || '',
+        batchSize: 512,
+      }),
+    )
     loggy(`[vector] fed vector store`)
 
     const results = await hnsw.similaritySearch(question)
     loggy(`[vector] queried the vector store`)
 
-    return results
+    return results.slice(0, 5)
   }
 
   loggy(`[vector] no documents found`)
