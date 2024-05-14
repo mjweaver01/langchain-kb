@@ -11,7 +11,7 @@ import {
   kbSystemPrompt,
   systemPrompt,
 } from './constants'
-import { rag } from './rag'
+import { vector } from './vector'
 
 const generatePromptTemplate = (sentPrompt: string) =>
   ChatPromptTemplate.fromMessages([
@@ -47,25 +47,25 @@ const knowledgeBaseLoader = new DynamicTool({
       model: 'knowledge_base',
     })
 
-    try {
-      generation.update({
-        completionStartTime: new Date(),
-      })
+    generation.update({
+      completionStartTime: new Date(),
+    })
 
+    try {
       try {
-        const results = await rag(question)
+        const results = await vector(question)
 
         if (results.length > 0) {
           loggy(`[knowledge_base] found results`)
         }
 
         generation.end({
-          output: results[0].title,
+          output: JSON.stringify(results[0]),
           level: 'DEFAULT',
         })
 
         trace.update({
-          output: results[0].title,
+          output: JSON.stringify(results[0]),
         })
 
         return JSON.stringify(results)
