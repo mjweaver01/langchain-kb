@@ -54,6 +54,11 @@ h1 {
   font-weight: 900;
 }
 
+.hero {
+  display: flex;
+  align-items: center;
+}
+
 @media (min-width: 500px) {
   h1 {
     font-size: 3em;
@@ -122,7 +127,7 @@ button {
   appearance: none;
   padding: 1em;
   background: var(--white);
-  border: 1px solid var(--dark-blue);
+  border: 1px solid var(--blue);
   border-radius: 5px;
   width: 100%;
 }

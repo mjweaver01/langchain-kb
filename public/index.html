@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Louie.ai</title>
-    <link rel="icon" href="/favicon.svg" />
+    <link rel="icon" href="/wsbb.png" />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/imessage.css" />
     <link rel="stylesheet" href="/loading.css" />
@@ -15,7 +15,7 @@
   <body>
     <div id="app">
       <div class="top">
-        <h1>🏋️ Louie.ai</h1>
+        <h1 class="hero"><img src="./wsbb.png" width="75" height="75"/> Louie.ai</h1>
         <p>
           An AI chatbot pretrained on Westside Barbell's <a href="https://westside-barbell.com/blogs/the-blog/" target="_blank">Blog</a>.
         </p>
@@ -72,15 +72,18 @@
           question: '',
           defaultQuestions: [
             'Tell me a little bit about yourself',
+            'Give me some tips and tricks about what you are best used for',
             'Who is Louie?',
             'Who is Tom to Louie?',
             'How can I best use the Reactive Method in my workout routines?',
             'What is the Conjugate Method?',
+            'What is the best way to get started with the Conjugate Method?',
             'What was the reverse hyper invented for? How is it best used?',
             'Give me the best powerlifting routine for a newcomer to the sport',
             'What advice would Louie give to a powerlifer struggling to improve their numbers?',
             'Give me a workout Louie would have loved',
             'Should I wear knee sleeves or wraps when squatting?',
+            'Compare Arnold Schwarzenegger\'s lifting style to Louie\'s',
           ],
           converter: new showdown.Converter(),
         }
