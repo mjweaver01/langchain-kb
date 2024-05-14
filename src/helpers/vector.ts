@@ -22,7 +22,7 @@ export const vector = async (question: string) => {
 
     const d = docs
       .filter((d: any) => d.pageContent && d.metadata)
-      .filter((d: any) => qArray.some((v) => JSON.stringify(d).indexOf(v) >= 0))
+      .filter((d: any) => qArray.some((v) => JSON.stringify(d).indexOf(v) >= 1))
       .slice(0, 50)
 
     if (!hnsw) {
