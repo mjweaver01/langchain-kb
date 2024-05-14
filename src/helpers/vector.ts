@@ -39,8 +39,6 @@ export const vector = async (question: string) => {
       d,
       new OpenAIEmbeddings({
         model: 'text-embedding-3-large',
-        apiKey: process.env.OPENAI_API_KEY || '',
-        batchSize: 512,
       }),
     )
     loggy(`[vector] fed vector store`)
