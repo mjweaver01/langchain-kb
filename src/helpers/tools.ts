@@ -3,16 +3,15 @@ import { WikipediaQueryRun } from '@langchain/community/tools/wikipedia_query_ru
 import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts'
 import { Calculator } from '@langchain/community/tools/calculator'
 import { DynamicTool } from '@langchain/community/tools/dynamic'
-import { SitemapLoader } from 'langchain/document_loaders/web/sitemap'
 import langfuse from './langfuse'
 import {
-  sitemapUrl,
   wikipediaPrompt,
   sitemapPrompt,
   gistSystemPrompt,
   kbSystemPrompt,
   systemPrompt,
 } from './constants'
+import { vector } from './vector'
 
 const generatePromptTemplate = (sentPrompt: string) =>
   ChatPromptTemplate.fromMessages([
@@ -48,26 +47,32 @@ const knowledgeBaseLoader = new DynamicTool({
       model: 'knowledge_base',
     })
 
+    generation.update({
+      completionStartTime: new Date(),
+    })
+
     try {
-      generation.update({
-        completionStartTime: new Date(),
-      })
+      try {
+        const results = await vector(question)
 
-      const loader = new SitemapLoader(sitemapUrl)
-      const docs = await loader.load()
-      const result = JSON.stringify(docs[0])
-      loggy(`[knowledge_base]: loaded sitemap`)
+        if (results.length > 0) {
+          loggy(`[knowledge_base] found results`)
+        }
 
-      generation.end({
-        output: JSON.stringify(result),
-        level: 'DEFAULT',
-      })
+        generation.end({
+          output: JSON.stringify(results[0]),
+          level: 'DEFAULT',
+        })
 
-      trace.update({
-        output: JSON.stringify(result),
-      })
+        trace.update({
+          output: JSON.stringify(results[0]),
+        })
 
-      return result
+        return JSON.stringify(results)
+      } catch (error) {
+        loggy(`[knowledge_base] error in the sitemap`)
+        throw error
+      }
     } catch (error) {
       generation.end({
         output: JSON.stringify(error),
@@ -78,7 +83,7 @@ const knowledgeBaseLoader = new DynamicTool({
         output: JSON.stringify(error),
       })
 
-      return 'Error in sitemap'
+      return '[knowledge_base] error in sitemap'
     } finally {
       await langfuse.shutdownAsync()
     }
@@ -114,7 +119,7 @@ const WikipediaQuery = new DynamicTool({
       })
 
       const result = await wikipediaQuery.call(question)
-      loggy(`[wikipedia] result: ${JSON.stringify(result)}`)
+      loggy(`[wikipedia] ${JSON.stringify(result).substring(0, 100)}`)
 
       generation.end({
         output: JSON.stringify(result),
@@ -136,7 +141,7 @@ const WikipediaQuery = new DynamicTool({
         output: JSON.stringify(error),
       })
 
-      return 'Error in wikipediaQuery'
+      return '[wikipedia] error in wikipediaQuery'
     } finally {
       await langfuse.shutdownAsync()
     }
