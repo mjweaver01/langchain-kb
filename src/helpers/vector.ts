@@ -6,8 +6,6 @@ import { SitemapLoader } from 'langchain/document_loaders/web/sitemap'
 import { sitemapUrl } from './constants'
 import { supabase } from './supabase'
 
-const embeddings = new OpenAIEmbeddings({ model: 'text-embedding-3-large' })
-
 function chunker(arr: any[], size: number) {
   let result = []
   for (let i = 0; i < arr.length; i += size) {
@@ -30,22 +28,30 @@ async function getDocs() {
 
 async function populateDocs() {
   loggy(`[rag] populating supabase`)
-  const chunkedDocs = chunker(docs, 100)
+  const chunkedDocs = chunker(docs, 49)
+  // @TODO this always fails after the first chunk
   for (const chunk of chunkedDocs) {
-    await supabase.from('documents').upsert(chunk)
+    const embeddings = new OpenAIEmbeddings({ model: 'text-embedding-3-large' })
+    const store = new SupabaseVectorStore(embeddings, {
+      client: supabase,
+      tableName: 'documents',
+      queryName: 'match_documents',
+    })
+
+    const vectors = await store.addDocuments(chunk)
+    await supabase.from('documents').upsert(vectors)
   }
   loggy(`[rag] fed vector store with ${docs.length} documents`)
 }
 
-export async function populate() {
+export async function populate(useSupabase = false) {
   // try to get docs from supabase first
   const existingDocs = (await supabase.from('documents').select('*')).data || []
-  if (existingDocs.length > 0) {
+  if (useSupabase && existingDocs.length > 0) {
     docs = existingDocs
     loggy(`[populate] retrieved documents from supabase`)
   } else {
     await getDocs()
-    await populateDocs()
   }
 }
 
@@ -53,10 +59,12 @@ export const rag = async (question: string) => {
   loggy(`[rag] searching "${question}"`)
 
   if (!docs || docs.length === 0 || !Array.isArray(docs)) {
-    await populate()
+    await populate(true)
+    await populateDocs()
   }
 
   if (Array.isArray(docs) && docs.length > 0) {
+    const embeddings = new OpenAIEmbeddings({ model: 'text-embedding-3-large' })
     const store = new SupabaseVectorStore(embeddings, {
       client: supabase,
       tableName: 'documents',
@@ -72,7 +80,6 @@ export const rag = async (question: string) => {
   return []
 }
 
-// non-RAG vector search
 export const vector = async (question: string) => {
   loggy(`[vector] searching "${question}"`)
 

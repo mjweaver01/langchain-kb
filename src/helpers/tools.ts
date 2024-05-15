@@ -53,8 +53,8 @@ const knowledgeBaseLoader = new DynamicTool({
 
     try {
       try {
-        // const results = await vector(question)
-        const results = await rag(question)
+        const results = await vector(question)
+        // const results = await rag(question)
 
         if (results.length > 0) {
           loggy(`[knowledge_base] found results`)
