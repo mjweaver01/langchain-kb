@@ -1,6 +1,24 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import handler from './helpers/handler'
+import handler from '../src/helpers/handler'
 
-export default function (request: VercelRequest, response: VercelResponse) {
-  return handler(request, response, 'kb')
+export default async function (req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') {
+    res.status(405).send('Method Not Allowed')
+    return
+  }
+
+  try {
+    const answer = await handler(req as any, res as any, 'kb')
+
+    res.status(200).json({
+      body: answer,
+      query: req.query,
+    })
+  } catch (e) {
+    // If it's not an Error object, handle it as a generic error
+    res.status(500).json({
+      error: 'Failed to exchange token',
+      details: 'An unknown error occurred',
+    })
+  }
 }
