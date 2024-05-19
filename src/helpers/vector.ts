@@ -30,6 +30,8 @@ async function populateDocs() {
   loggy(`[rag] populating supabase`)
   const chunkedDocs = chunker(docs, 49)
   // @TODO this always fails after the first chunk
+  // when chunk is larger than ~25 docs, due to context window
+  // chunking doesn't help :(
   for (const chunk of chunkedDocs) {
     const embeddings = new OpenAIEmbeddings({ model: 'text-embedding-3-large' })
     const store = new SupabaseVectorStore(embeddings, {
