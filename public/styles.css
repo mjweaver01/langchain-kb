@@ -154,25 +154,6 @@ body {
   padding: 0;
 }
 
-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: rgba(255, 255, 255, 0.97);
-  padding: 1rem;
-  border-bottom: 1px solid rgba(204, 204, 204, 0.42);
-}
-
-nav img {
-  width: 125px;
-}
-
-@media (min-width: 500px) {
-  nav img {
-    width: 175px;
-  }
-}
-
 a {
   color: var(--black);
 }
