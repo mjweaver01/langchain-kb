@@ -2,7 +2,7 @@
 
 > A knowledge base chatbot, pre-trained on blogs from sitemap XML
 
-Currently using [Westside Barbell's Shopify Blog Sitemap](https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml)
+Using filtered results from [Westside Barbell's Shopify Blog Sitemap](https://raw.githubusercontent.com/mjweaver01/langchain-kb/master/src/assets/sitemap_blogs_1.xml)
 
 Powered by [Langchain](https://js.langchain.com/) and [Langfuse](https://langfuse.com)
 
