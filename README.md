@@ -6,7 +6,7 @@ Currently using [Westside Barbell's Shopify Blog Sitemap](https://raw.githubuser
 
 Powered by [Langchain](https://js.langchain.com/) and [Langfuse](https://langfuse.com)
 
-[Live Demo](https://langchain-kb.onrender.com/)
+[Live Demo](https://langchain-kb.vercel.app/)
 
 |                               |                                |                                |
 | :---------------------------: | :----------------------------: | :----------------------------: |
