@@ -15,6 +15,7 @@
     "@langchain/openai": "^0.0.29",
     "@supabase/supabase-js": "^2.42.3",
     "@types/express": "^4.17.21",
+    "@vercel/node": "^3.1.5",
     "chalk": "^5.3.0",
     "cheerio": "^1.0.0-rc.12",
     "crypto-random-bigint": "^2.1.0",
