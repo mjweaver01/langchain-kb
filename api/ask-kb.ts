@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { Request, Response } from 'express'
 import handler from '../src/helpers/handler'
 
 export default async function (req: VercelRequest, res: VercelResponse) {
@@ -8,7 +9,11 @@ export default async function (req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const answer = await handler(req as any, res as any, 'kb')
+    const answer = await handler(
+      req as Request & VercelRequest,
+      res as Response & VercelResponse,
+      'kb',
+    )
 
     res.status(200).json({
       body: answer,
@@ -16,9 +21,6 @@ export default async function (req: VercelRequest, res: VercelResponse) {
     })
   } catch (e) {
     // If it's not an Error object, handle it as a generic error
-    res.status(500).json({
-      error: 'Failed to exchange token',
-      details: 'An unknown error occurred',
-    })
+    res.status(500).json(e)
   }
 }
