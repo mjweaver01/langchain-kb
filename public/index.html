@@ -144,6 +144,14 @@
                 this.scrollToBottom()
               }
             })
+            .catch((err) => {
+               console.error(err)
+               this.loading = false
+
+               this.messages.push({
+                text: 'I\'m sorry, I\'m having trouble understanding you. Please try again.',
+               })
+             })
         },
 
         scrollToBottom() {
