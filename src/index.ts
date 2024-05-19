@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import * as dotenv from 'dotenv'
+import cors from 'cors'
 import chalk from 'chalk'
 import loggy from './helpers/loggy'
 import handler from './helpers/handler'
@@ -19,6 +20,11 @@ const appName = chalk.hex('#1877f2')('[🦜🔗] ')
 const app = express()
 const port = isProd ? 80 : 9179
 app.use(express.json())
+
+// -----------------------
+// cors
+// -----------------------
+app.use(cors())
 
 // -----------------------
 // routes
