@@ -57,7 +57,7 @@ const knowledgeBaseLoader = new DynamicTool({
         // const results = await rag(question)
 
         if (results.length > 0) {
-          loggy(`[knowledge_base] found results`)
+          loggy(`[knowledge_base] found ${results.length} results`)
         }
 
         generation.end({

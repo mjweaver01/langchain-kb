@@ -50,7 +50,10 @@ export const vector = async (question: string) => {
       .filter((d: any) => d.pageContent && d.metadata)
       .filter((d: any) =>
         qArray.some(
-          (v) => d.metadata.title?.indexOf(v) >= 1 || d.metadata.description?.indexOf(v) >= 1,
+          (v) =>
+            d.metadata.title?.indexOf(v) >= 1 ||
+            d.metadata.description?.indexOf(v) >= 1 ||
+            d.pageContent.indexOf(v) >= 1,
         ),
       )
       .map((d: any) => {
