@@ -155,8 +155,8 @@
 
         scrollToBottom() {
           this.$nextTick(() => {
-            document.getElementById('question-input').focus()
             if(window.innerWidth < 500) {
+              document.getElementById('question-input').focus()
               this.$el.scrollTop = this.$el.scrollHeight
             }
           })
