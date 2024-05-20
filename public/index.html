@@ -140,7 +140,6 @@
               } catch {
               } finally {
                 this.loading = false
-
                 this.scrollToBottom()
               }
             })
@@ -157,7 +156,9 @@
         scrollToBottom() {
           this.$nextTick(() => {
             document.getElementById('question-input').focus()
-            this.$el.scrollTop = this.$el.scrollHeight
+            if(window.innerWidth < 500) {
+              this.$el.scrollTop = this.$el.scrollHeight
+            }
           })
         },
 
