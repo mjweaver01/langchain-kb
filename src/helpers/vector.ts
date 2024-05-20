@@ -1,7 +1,7 @@
 import fs from 'fs'
 import loggy from './loggy'
 import { OpenAIEmbeddings } from '@langchain/openai'
-// import { SupabaseVectorStore } from '@langchain/community/vectorstores/supabase'
+import { SupabaseVectorStore } from '@langchain/community/vectorstores/supabase'
 import { HNSWLib } from '@langchain/community/vectorstores/hnswlib'
 import { Document } from '@langchain/core/documents'
 import { SitemapLoader } from 'langchain/document_loaders/web/sitemap'
@@ -58,7 +58,10 @@ export const vector = async (question: string) => {
       )
       .map((d: any) => {
         const count = qArray.filter(
-          (v) => d.metadata.title?.indexOf(v) >= 1 || d.metadata.description?.indexOf(v) >= 1,
+          (v) =>
+            d.metadata.title?.indexOf(v) >= 1 ||
+            d.metadata.description?.indexOf(v) >= 1 ||
+            d.pageContent.indexOf(v) >= 1,
         )
 
         return {
@@ -90,57 +93,59 @@ export const vector = async (question: string) => {
   return []
 }
 
-// RAG
-// Don't really need, since we are using HNSW
 // -----------
-// function chunker(arr: any[], size: number) {
-//   let result = []
-//   for (let i = 0; i < arr.length; i += size) {
-//     result.push(arr.slice(i, i + size))
-//   }
-//   return result
-// }
-// async function populateDocs() {
-//   loggy(`[rag] populating supabase`)
-//   const chunkedDocs = chunker(docs, 49)
-//   // @TODO this always fails after the first chunk
-//   // when chunk is larger than ~25 docs, due to context window
-//   // chunking doesn't help :(
-//   for (const chunk of chunkedDocs) {
-//     const embeddings = new OpenAIEmbeddings({ model: 'text-embedding-3-large' })
-//     const store = new SupabaseVectorStore(embeddings, {
-//       client: supabase,
-//       tableName: 'documents',
-//       queryName: 'match_documents',
-//     })
+// RAG – WORK IN PROGRESS
+// The question is: how to feed it all the 420+ entries?
+// -----------
 
-//     const vectors = await store.addDocuments(chunk)
-//     await supabase.from('documents').upsert(vectors)
-//   }
-//   loggy(`[rag] fed vector store with ${docs.length} documents`)
-// }
+function chunker(arr: any[], size: number) {
+  let result = []
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size))
+  }
+  return result
+}
+async function populateDocs() {
+  loggy(`[rag] populating supabase`)
+  const chunkedDocs = chunker(docs, 49)
+  // @TODO this always fails after the first chunk
+  // when chunk is larger than ~25 docs, due to context window
+  // chunking doesn't help :(
+  for (const chunk of chunkedDocs) {
+    const embeddings = new OpenAIEmbeddings({ model: 'text-embedding-3-large' })
+    const store = new SupabaseVectorStore(embeddings, {
+      client: supabase,
+      tableName: 'documents',
+      queryName: 'match_documents',
+    })
 
-// export const rag = async (question: string) => {
-//   loggy(`[rag] searching "${question}"`)
+    const vectors = await store.addDocuments(chunk)
+    await supabase.from('documents').upsert(vectors)
+  }
+  loggy(`[rag] fed vector store with ${docs.length} documents`)
+}
 
-//   if (!docs || docs.length === 0 || !Array.isArray(docs)) {
-//     await populate(true)
-//     await populateDocs()
-//   }
+export const rag = async (question: string) => {
+  loggy(`[rag] searching "${question}"`)
 
-//   if (Array.isArray(docs) && docs.length > 0) {
-//     const embeddings = new OpenAIEmbeddings({ model: 'text-embedding-3-large' })
-//     const store = new SupabaseVectorStore(embeddings, {
-//       client: supabase,
-//       tableName: 'documents',
-//       queryName: 'match_documents',
-//     })
+  if (!docs || docs.length === 0 || !Array.isArray(docs)) {
+    await populate(true)
+    await populateDocs()
+  }
 
-//     const results = await store.similaritySearch(question, 1)
-//     loggy(`[rag] queried the vector store`)
-//     return results
-//   }
+  if (Array.isArray(docs) && docs.length > 0) {
+    const embeddings = new OpenAIEmbeddings({ model: 'text-embedding-3-large' })
+    const store = new SupabaseVectorStore(embeddings, {
+      client: supabase,
+      tableName: 'documents',
+      queryName: 'match_documents',
+    })
 
-//   loggy(`[rag] no documents found`)
-//   return []
-// }
+    const results = await store.similaritySearch(question, 1)
+    loggy(`[rag] queried the vector store`)
+    return results
+  }
+
+  loggy(`[rag] no documents found`)
+  return []
+}
