@@ -10,7 +10,7 @@ import crons from './helpers/crons'
 // data
 // -----------------------
 dotenv.config()
-const { NODE_ENV, PORT } = process.env
+const { NODE_ENV } = process.env
 const isProd = NODE_ENV === 'production'
 const appName = chalk.hex('#1877f2')('[🦜🔗] ')
 
@@ -18,7 +18,7 @@ const appName = chalk.hex('#1877f2')('[🦜🔗] ')
 // express app
 // -----------------------
 const app = express()
-const port = PORT ? PORT : isProd ? 80 : 9179
+const port = isProd ? 80 : 9179
 app.use(express.json())
 
 // -----------------------
