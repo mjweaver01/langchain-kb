@@ -2,6 +2,7 @@ import loggy from './loggy'
 import { OpenAIEmbeddings } from '@langchain/openai'
 import { SupabaseVectorStore } from '@langchain/community/vectorstores/supabase'
 import { HNSWLib } from '@langchain/community/vectorstores/hnswlib'
+import { Document } from '@langchain/core/documents'
 import { SitemapLoader } from 'langchain/document_loaders/web/sitemap'
 import { sitemapUrl } from './constants'
 import { supabase } from './supabase'
@@ -21,7 +22,7 @@ async function getDocs() {
       selector: '.article-content', //extract article content only,
     })
 
-    docs = await loader.load()
+    docs = (await loader.load()) as Document[]
     loggy(`[sitemap] loaded sitemap`)
   }
 }
@@ -89,23 +90,33 @@ export const vector = async (question: string) => {
     await populate()
   }
 
+  // manual filter before sending to embeddings
   if (Array.isArray(docs) && docs.length > 0) {
-    let d = docs
+    // try to find partial matches
+    // this slims down the results to fit our context window
+    const qArray = question.split(' ').filter((v) => v.length > 2)
+    const d = docs
       .filter((d: any) => d.pageContent && d.metadata)
-      .filter((d: any) => JSON.stringify(d)?.indexOf(question) >= 1)
-      .slice(0, 10)
-
-    if (d.length === 0) {
-      const qArray = question.split(' ').filter((v) => v.length > 2)
-      d = docs
-        .filter((d: any) => d.pageContent && d.metadata)
-        .filter((d: any) =>
-          qArray.some(
-            (v) => d.metadata.title?.indexOf(v) >= 1 || d.metadata.description?.indexOf(v) >= 1,
-          ),
+      .filter((d: any) =>
+        qArray.some(
+          (v) => d.metadata.title?.indexOf(v) >= 1 || d.metadata.description?.indexOf(v) >= 1,
+        ),
+      )
+      .map((d: any) => {
+        const count = qArray.filter(
+          (v) => d.metadata.title?.indexOf(v) >= 1 || d.metadata.description?.indexOf(v) >= 1,
         )
-        .slice(0, 10)
-    }
+
+        return {
+          ...d,
+          metadata: {
+            ...d.metadata,
+            score: count.length,
+          },
+        }
+      })
+      .sort((a: any, b: any) => b.metadata.score - a.metadata.score)
+      .slice(0, 10)
 
     const hnsw = await HNSWLib.fromDocuments(
       d,
