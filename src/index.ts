@@ -18,7 +18,7 @@ const appName = chalk.hex('#1877f2')('[🦜🔗] ')
 // express app
 // -----------------------
 const app = express()
-const port = PORT || isProd ? 80 : 9179
+const port = PORT ? PORT : isProd ? 80 : 9179
 app.use(express.json())
 
 // -----------------------
