@@ -5,6 +5,7 @@ import chalk from 'chalk'
 import loggy from './helpers/loggy'
 import handler from './helpers/handler'
 import crons from './helpers/crons'
+import { populate } from './helpers/vector'
 
 // -----------------------
 // data
@@ -27,9 +28,17 @@ app.use(express.json())
 app.use(cors())
 
 // -----------------------
-// routes
+// kb routes
 // -----------------------
 app.post('/ask-kb', (req: Request, res: Response) => handler(req, res, 'kb'))
+app.post('/populate-kb', async (req: Request, res: Response) => {
+  await populate(false, true)
+  res.send('done')
+})
+
+// -----------------------
+// chat routes
+// -----------------------
 app.post('/ask-gpt', (req: Request, res: Response) => handler(req, res, 'gpt'))
 app.post('/get-gist', (req: Request, res: Response) => handler(req, res, 'gist'))
 
