@@ -53,6 +53,14 @@ app.use(express.static('public', { extensions: ['html'] }))
 crons()
 
 // -----------------------
+// ping / keepalive
+// -----------------------
+app.get('/ping', (req: Request, res: Response) => {
+  loggy(appName + 'ping/pong')
+  res.send('pong')
+})
+
+// -----------------------
 // start listening
 // -----------------------
 app.listen(port, () =>
