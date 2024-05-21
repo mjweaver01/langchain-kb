@@ -47,12 +47,12 @@ export const vector = async (question: string) => {
     // presort results
     // this slims down the results to fit our context window
     const d = fuzzysort
-      .go(question, docs as any[], {
+      .go(question, docs, {
         threshold: 0,
         all: true,
         keys: ['pageContent', 'metadata.title', 'metadata.description', 'metadata.source'],
       })
-      .map((x: any) => ({ score: x.score, ...x.target, ...x.obj }))
+      .map((x) => ({ score: x.score, ...x.obj }))
       .slice(0, 10)
 
     const hnsw = await HNSWLib.fromDocuments(
