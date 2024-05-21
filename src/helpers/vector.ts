@@ -10,6 +10,8 @@ import { sitemapUrl } from './constants'
 import { supabase } from './supabase'
 import sitemapDocs from '../assets/sitemap_docs.json'
 
+const LIMIT = 10
+
 const smd = JSON.parse(JSON.stringify(sitemapDocs))
 let docs: Document[] = smd.length > 0 ? smd : []
 async function getDocs(writeFile = false) {
@@ -53,17 +55,51 @@ export const vector = async (question: string) => {
         keys: ['pageContent', 'metadata.title', 'metadata.description', 'metadata.source'],
       })
       .map((x) => ({ score: x.score, ...x.obj }))
-      .slice(0, 10)
+      .slice(0, LIMIT / 2)
+
+    // fallback filter for fuzzy search
+    const qArray = question.split(' ').filter((v) => v.length > 2)
+    const d2 = docs
+      .filter((d: any) => d.pageContent && d.metadata)
+      .filter((d: any) =>
+        qArray.some(
+          (v) =>
+            d.metadata.title?.indexOf(v) >= 1 ||
+            d.metadata.description?.indexOf(v) >= 1 ||
+            d.pageContent.indexOf(v) >= 1,
+        ),
+      )
+      .map((d: any) => {
+        const count = qArray.filter(
+          (v) =>
+            d.metadata.title?.indexOf(v) >= 1 ||
+            d.metadata.description?.indexOf(v) >= 1 ||
+            d.pageContent.indexOf(v) >= 1,
+        )
+
+        return {
+          ...d,
+          score: count.length / 10,
+          metadata: {
+            ...d.metadata,
+          },
+        }
+      })
+      .sort((a: any, b: any) => b.score - a.score)
+      .slice(0, LIMIT / 2)
+
+    // merge results
+    const mergedResults = [...d, ...d2].sort((a: any, b: any) => b.score - a.score)
 
     const hnsw = await HNSWLib.fromDocuments(
-      d,
+      mergedResults,
       new OpenAIEmbeddings({
         model: 'text-embedding-3-large',
       }),
     )
     loggy(`[vector] fed vector store`)
 
-    const results = await hnsw.similaritySearch(question, 1)
+    const results = await hnsw.similaritySearch(question, LIMIT / 2)
     loggy(`[vector] queried the vector store`)
 
     return results
