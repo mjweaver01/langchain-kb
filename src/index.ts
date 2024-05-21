@@ -55,9 +55,9 @@ crons()
 // -----------------------
 // ping / keepalive
 // -----------------------
-app.get('/ping', (req: Request, res: Response) => {
-  loggy(appName + 'ping/pong')
-  res.send('pong')
+app.get('/resuscitate', (req: Request, res: Response) => {
+  loggy(appName + 'resuscitate')
+  res.send('breathing')
 })
 
 // -----------------------
