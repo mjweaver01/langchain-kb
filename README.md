@@ -67,3 +67,9 @@ You can build and run the Cloud Run image with the following commands:
 # Build and deploy
 gcloud run deploy
 ```
+
+### 🚑 Keepalive
+
+This is currently hosted on a free tier of Render, which has a 1000-minute limit.
+
+In order to curb this, we're using a [val.town cron](https://www.val.town/v/mjweaver01/Louieai_Keepalive), which pings the server every 15 minutes.
