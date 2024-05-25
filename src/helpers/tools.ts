@@ -6,8 +6,8 @@ import { DynamicTool } from '@langchain/community/tools/dynamic'
 import langfuse from './langfuse'
 import {
   wikipediaPrompt,
-  sitemapPrompt,
   gistSystemPrompt,
+  kbToolPrompt,
   kbSystemPrompt,
   systemPrompt,
 } from './constants'
@@ -28,10 +28,12 @@ const compiledKbSystemPrompt = kbPrompt.prompt ? kbPrompt.prompt : kbSystemPromp
 export const gptSystemPromptTemplate = generatePromptTemplate(compiledSystemPrompt)
 export const gistSystemPromptTemplate = generatePromptTemplate(gistSystemPrompt)
 export const kbSystemPromptTemplate = generatePromptTemplate(compiledKbSystemPrompt)
+const remoteKbToolPrompt = await langfuse.getPrompt('KB_TOOL_PROMPT')
+const compiledKbToolPrompt = remoteKbToolPrompt.prompt ? remoteKbToolPrompt.prompt : kbToolPrompt
 
 const knowledgeBaseLoader = new DynamicTool({
   name: 'knowledge_base',
-  description: sitemapPrompt,
+  description: compiledKbToolPrompt,
   func: async (question: string, runManager, meta) => {
     const sessionId = meta?.configurable?.sessionId
 
