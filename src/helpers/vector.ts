@@ -12,8 +12,16 @@ import sitemapDocs from '../assets/sitemap_docs.json'
 
 const LIMIT = 10
 
+const format = (text: string) => text.replace(/\s\s+/g, ' ').split('Share This Post')[0].trim()
+const formatDocs = (docs: Document[]) => {
+  return docs.map((doc) => {
+    doc.pageContent = format(doc.pageContent)
+    return doc
+  })
+}
+
 const smd = JSON.parse(JSON.stringify(sitemapDocs))
-let docs: Document[] = smd.length > 0 ? smd : []
+let docs: Document[] = smd.length > 0 ? formatDocs(smd) : []
 async function getDocs(writeFile = false) {
   if (!docs || docs.length === 0 || !Array.isArray(docs)) {
     const loader = new SitemapLoader(sitemapUrl, {
@@ -21,6 +29,8 @@ async function getDocs(writeFile = false) {
     })
 
     docs = await loader.load()
+    docs = formatDocs(docs)
+
     if (writeFile) fs.writeFileSync('src/assets/sitemap_docs.json', JSON.stringify(docs, null, 2))
     loggy(`[sitemap] loaded sitemap`)
   }
@@ -30,7 +40,7 @@ export async function populate(useSupabase = false, writeFile = false) {
   // try to get docs from supabase first
   const existingDocs = (await supabase.from('documents').select('*')).data || []
   if (useSupabase && existingDocs.length > 0) {
-    docs = existingDocs
+    docs = formatDocs(existingDocs)
     loggy(`[populate] retrieved documents from supabase`)
   } else {
     await getDocs(writeFile)
