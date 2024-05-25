@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getCache, saveToCache } from './cache'
+import { getCache, saveToCache, getConversation } from './cache'
 import { askQuestion } from './ask'
 import loggy from './loggy'
 
@@ -13,6 +13,24 @@ export const handler = async (req: Request, res: Response, context: SourceType) 
   loggy(`[${context}] ${input?.toString().substring(0, 50) ?? 'hit handler'}`, false)
 
   const currentTime = Date.now()
+
+  if (context === 'conversation') {
+    const conversation = await getConversation(conversationId)
+
+    if (!conversationId || conversationId.length <= 0 || !conversation) {
+      return res.json({
+        code: 404,
+        message: 'Conversation not found',
+        error: true,
+      })
+    }
+
+    return res.json({
+      code: 200,
+      message: 'Conversation found',
+      conversation: conversation,
+    })
+  }
 
   if (input?.length <= 0 && url?.length <= 0 && data?.length <= 0)
     return res.json({

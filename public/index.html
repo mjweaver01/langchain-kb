@@ -27,8 +27,8 @@
         <div id="imessage" class="imessage" v-if="messages.length > 0">
           <p
             v-for="message in messages"
-            v-bind:class="{ 'from-me': message.isUser, 'from-them': !message.isUser }"
-            v-html="sanitizeMessage(message.text.output ?? message.text)"
+            v-bind:class="{ 'from-me': message.isUser || message.role === 'user', 'from-them': !message.isUser && message.role !== 'user' }"
+            v-html="sanitizeMessage(message.text?.output ?? message.text ?? message.content)"
           ></p>
           <p v-if="loading" class="from-them loading-message">
             <span class="loading">
@@ -91,6 +91,11 @@
           converter: new showdown.Converter(),
         }
       },
+      mounted() {
+        const params = new URLSearchParams(window.location.search)
+        const conversationId = params.get('conversationId')
+        if(conversationId.length > 0) this.getConversation(conversationId)
+      },
       methods: {
         async ask(sentQuestion = '') {
           const question =
@@ -128,6 +133,9 @@
                 if (parsedData.answer) {
                   if (parsedData.answer.conversationId) {
                     this.conversationId = parsedData.answer.conversationId
+                    const url = new URL(window.location.href)
+                    url.searchParams.set("conversationId", parsedData.answer.conversationId)
+                    window.history.pushState(null, '', url.toString())
                   }
 
                   this.messages.push({
@@ -155,6 +163,29 @@
              })
         },
 
+        getConversation(sentConversation) {
+          fetch(`/get-conversation${window.location.search}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              conversationId: sentConversation,
+            }),
+          })
+            .then(res => res.json())
+            .then((data) => {
+              console.log(this.conversationId)
+              if(data.conversation && data.conversation.messages) {
+                this.messages = data.conversation.messages
+                this.conversationId = data.conversation.id
+              } else {
+                this.clearConversation()
+              }
+              console.log(this.conversationId)
+            })
+        },
+
         scrollToBottom() {
           this.$nextTick(() => {
             if(window.innerWidth < 500) {
@@ -169,6 +200,11 @@
           this.question = ''
           this.conversationId = ''
           this.scrollToBottom()
+
+          const url = new URL(window.location.href)
+          url.searchParams.delete("conversationId")
+          window.history.pushState(null, '', url.toString())
+
         },
 
         sanitizeMessage(message) {

@@ -11,7 +11,7 @@ declare global {
     answer: string
   }
 
-  type SourceType = 'gpt' | 'gist' | 'kb'
+  type SourceType = 'gpt' | 'gist' | 'kb' | 'conversation'
 
   type Answer = {
     input: string

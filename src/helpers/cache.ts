@@ -44,3 +44,8 @@ export const saveToCache = async (
     } catch {}
   }
 }
+
+export const getConversation = async (conversationId: string) => {
+  const { data } = await supabase.from('conversations').select('*').eq('id', conversationId)
+  return data?.[0]
+}
