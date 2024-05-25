@@ -10,7 +10,7 @@ import { sitemapUrl } from './constants'
 import { supabase } from './supabase'
 import sitemapDocs from '../assets/sitemap_docs.json'
 
-const LIMIT = 10
+const LIMIT = 5
 
 const format = (text: string) => text.replace(/\s\s+/g, ' ').split('Share This Post')[0].trim()
 const formatDocs = (docs: Document[]) => {
@@ -65,7 +65,7 @@ export const vector = async (question: string) => {
         keys: ['pageContent', 'metadata.title', 'metadata.description', 'metadata.source'],
       })
       .map((x) => ({ score: x.score, ...x.obj }))
-      .slice(0, LIMIT / 2)
+      .slice(0, LIMIT * 2)
 
     // fallback filter for fuzzy search
     const qArray = question.split(' ').filter((v) => v.length > 2)
@@ -96,10 +96,17 @@ export const vector = async (question: string) => {
         }
       })
       .sort((a: any, b: any) => b.score - a.score)
-      .slice(0, LIMIT / 2)
+      .slice(0, LIMIT * 2)
 
     // merge results
-    const mergedResults = [...d, ...d2].sort((a: any, b: any) => b.score - a.score)
+    var seen: any = {}
+    const mergedResults = [...d, ...d2]
+      .sort((a: any, b: any) => b.score - a.score)
+      .filter(function (item) {
+        var k = item.metadata.url || item.pageContent
+        return seen.hasOwnProperty(k) ? false : (seen[k] = true)
+      })
+      .slice(0, LIMIT)
 
     const hnsw = await HNSWLib.fromDocuments(
       mergedResults,
@@ -109,7 +116,7 @@ export const vector = async (question: string) => {
     )
     loggy(`[vector] fed vector store`)
 
-    const results = await hnsw.similaritySearch(question, LIMIT / 2)
+    const results = await hnsw.similaritySearch(question, LIMIT)
     loggy(`[vector] queried the vector store`)
 
     return results
