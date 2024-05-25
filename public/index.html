@@ -175,14 +175,12 @@
           })
             .then(res => res.json())
             .then((data) => {
-              console.log(this.conversationId)
               if(data.conversation && data.conversation.messages) {
                 this.messages = data.conversation.messages
                 this.conversationId = data.conversation.id
               } else {
                 this.clearConversation()
               }
-              console.log(this.conversationId)
             })
         },
 
