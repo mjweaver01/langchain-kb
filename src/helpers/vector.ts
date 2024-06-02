@@ -5,12 +5,12 @@ import { OpenAIEmbeddings } from '@langchain/openai'
 import { SupabaseVectorStore } from '@langchain/community/vectorstores/supabase'
 import { HNSWLib } from '@langchain/community/vectorstores/hnswlib'
 import { Document } from '@langchain/core/documents'
-import { SitemapLoader } from 'langchain/document_loaders/web/sitemap'
+import { SitemapLoader } from '@langchain/community/document_loaders/web/sitemap'
 import { sitemapUrl } from './constants'
 import { supabase } from './supabase'
 import sitemapDocs from '../assets/sitemap_docs.json'
 
-const LIMIT = 5
+const LIMIT = 2
 
 const format = (text: string) => text.replace(/\s\s+/g, ' ').split('Share This Post')[0].trim()
 const formatDocs = (docs: Document[]) => {
@@ -106,7 +106,7 @@ export const vector = async (question: string) => {
         var k = item.metadata.url || item.pageContent
         return seen.hasOwnProperty(k) ? false : (seen[k] = true)
       })
-      .slice(0, LIMIT)
+      .slice(0, LIMIT / 2)
 
     const hnsw = await HNSWLib.fromDocuments(
       mergedResults,
@@ -116,7 +116,7 @@ export const vector = async (question: string) => {
     )
     loggy(`[vector] fed vector store`)
 
-    const results = await hnsw.similaritySearch(question, LIMIT)
+    const results = await hnsw.similaritySearch(question, LIMIT / 2)
     loggy(`[vector] queried the vector store`)
 
     return results

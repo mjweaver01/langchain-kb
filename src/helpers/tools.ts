@@ -27,7 +27,8 @@ const kbPrompt = await langfuse.getPrompt('KB_SYSTEM_PROMPT')
 const compiledKbSystemPrompt = kbPrompt.prompt ? kbPrompt.prompt : kbSystemPrompt
 export const gptSystemPromptTemplate = generatePromptTemplate(compiledSystemPrompt)
 export const gistSystemPromptTemplate = generatePromptTemplate(gistSystemPrompt)
-export const kbSystemPromptTemplate = generatePromptTemplate(compiledKbSystemPrompt)
+// export const kbSystemPromptTemplate = generatePromptTemplate(compiledKbSystemPrompt)
+export const kbSystemPromptTemplate = generatePromptTemplate('compiledKbSystemPrompt')
 const remoteKbToolPrompt = await langfuse.getPrompt('KB_TOOL_PROMPT')
 const compiledKbToolPrompt = remoteKbToolPrompt.prompt ? remoteKbToolPrompt.prompt : kbToolPrompt
 
@@ -59,7 +60,7 @@ const knowledgeBaseLoader = new DynamicTool({
         // const results = await rag(question)
 
         if (results.length > 0) {
-          loggy(`[knowledge_base] found ${results.length} results`)
+          loggy(`[knowledge_base] found ${results.length} result${results.length !== 1 ? 's' : ''}`)
         }
 
         generation.end({
@@ -73,6 +74,7 @@ const knowledgeBaseLoader = new DynamicTool({
 
         return JSON.stringify(results)
       } catch (error) {
+        console.log(error)
         loggy(`[knowledge_base] error in the sitemap`)
         throw error
       }
