@@ -28,7 +28,7 @@ const compiledKbSystemPrompt = kbPrompt.prompt ? kbPrompt.prompt : kbSystemPromp
 export const gptSystemPromptTemplate = generatePromptTemplate(compiledSystemPrompt)
 export const gistSystemPromptTemplate = generatePromptTemplate(gistSystemPrompt)
 // export const kbSystemPromptTemplate = generatePromptTemplate(compiledKbSystemPrompt)
-export const kbSystemPromptTemplate = generatePromptTemplate('compiledKbSystemPrompt')
+export const kbSystemPromptTemplate = generatePromptTemplate(compiledKbSystemPrompt)
 const remoteKbToolPrompt = await langfuse.getPrompt('KB_TOOL_PROMPT')
 const compiledKbToolPrompt = remoteKbToolPrompt.prompt ? remoteKbToolPrompt.prompt : kbToolPrompt
 

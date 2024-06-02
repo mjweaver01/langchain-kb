@@ -10,7 +10,7 @@ import { sitemapUrl } from './constants'
 import { supabase } from './supabase'
 import sitemapDocs from '../assets/sitemap_docs.json'
 
-const LIMIT = 2
+const LIMIT = 10
 
 const format = (text: string) => text.replace(/\s\s+/g, ' ').split('Share This Post')[0].trim()
 const formatDocs = (docs: Document[]) => {
@@ -106,7 +106,7 @@ export const vector = async (question: string) => {
         var k = item.metadata.url || item.pageContent
         return seen.hasOwnProperty(k) ? false : (seen[k] = true)
       })
-      .slice(0, LIMIT / 2)
+      .slice(0, LIMIT)
 
     const hnsw = await HNSWLib.fromDocuments(
       mergedResults,
@@ -116,7 +116,7 @@ export const vector = async (question: string) => {
     )
     loggy(`[vector] fed vector store`)
 
-    const results = await hnsw.similaritySearch(question, LIMIT / 2)
+    const results = await hnsw.similaritySearch(question, LIMIT)
     loggy(`[vector] queried the vector store`)
 
     return results
