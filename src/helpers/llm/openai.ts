@@ -1,7 +1,7 @@
 import { ChatOpenAI } from '@langchain/openai'
 import { convertToOpenAIFunction } from '@langchain/core/utils/function_calling'
 import { tools, kbTools } from './tools'
-import { fourOModel, threeModel } from './constants'
+import { fourOModel, threeModel } from '../constants'
 
 export const llm = (newModel: boolean = false) =>
   new ChatOpenAI({

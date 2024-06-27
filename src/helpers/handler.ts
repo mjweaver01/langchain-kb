@@ -9,6 +9,7 @@ export const handler = async (req: Request, res: Response, context: SourceType) 
   const data = req.body?.data ?? null
   let input = req.body?.question?.trim() ?? null
   const nocache = req.body?.nocache ?? req.query?.nocache === 'true' ?? false
+  const model = req.body?.model ?? req.query?.model ?? 'openai'
 
   loggy(`[${context}] ${input?.toString().substring(0, 50) ?? 'hit handler'}`, false)
 
@@ -64,7 +65,7 @@ export const handler = async (req: Request, res: Response, context: SourceType) 
   }
 
   try {
-    const answer = await askQuestion(input, context, conversationId)
+    const answer = await askQuestion(input, context, conversationId, model)
     saveToCache(context, currentTime, input, answer)
 
     return res.json({

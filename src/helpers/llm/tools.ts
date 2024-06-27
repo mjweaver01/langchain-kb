@@ -1,36 +1,11 @@
-import loggy from './loggy'
+import loggy from '../loggy'
 import { WikipediaQueryRun } from '@langchain/community/tools/wikipedia_query_run'
-import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts'
 import { Calculator } from '@langchain/community/tools/calculator'
 import { DynamicTool } from '@langchain/community/tools/dynamic'
-import langfuse from './langfuse'
-import {
-  wikipediaPrompt,
-  gistSystemPrompt,
-  kbToolPrompt,
-  kbSystemPrompt,
-  systemPrompt,
-} from './constants'
-import { vector, rag } from './vector'
-
-const generatePromptTemplate = (sentPrompt: string) =>
-  ChatPromptTemplate.fromMessages([
-    ['system', sentPrompt],
-    new MessagesPlaceholder('chat_history'),
-    ['human', '{input}'],
-    new MessagesPlaceholder('agent_scratchpad'),
-  ])
-
-const remoteSystemPrompt = await langfuse.getPrompt('System_Prompt')
-const compiledSystemPrompt = remoteSystemPrompt.prompt ? remoteSystemPrompt.prompt : systemPrompt
-const kbPrompt = await langfuse.getPrompt('KB_SYSTEM_PROMPT')
-const compiledKbSystemPrompt = kbPrompt.prompt ? kbPrompt.prompt : kbSystemPrompt
-export const gptSystemPromptTemplate = generatePromptTemplate(compiledSystemPrompt)
-export const gistSystemPromptTemplate = generatePromptTemplate(gistSystemPrompt)
-// export const kbSystemPromptTemplate = generatePromptTemplate(compiledKbSystemPrompt)
-export const kbSystemPromptTemplate = generatePromptTemplate(compiledKbSystemPrompt)
-const remoteKbToolPrompt = await langfuse.getPrompt('KB_TOOL_PROMPT')
-const compiledKbToolPrompt = remoteKbToolPrompt.prompt ? remoteKbToolPrompt.prompt : kbToolPrompt
+import langfuse from '../langfuse'
+import { wikipediaPrompt } from '../constants'
+import { compiledKbToolPrompt } from './prompts'
+import { vector, rag } from '../vector'
 
 const knowledgeBaseLoader = new DynamicTool({
   name: 'knowledge_base',
