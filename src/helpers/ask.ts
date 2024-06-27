@@ -78,11 +78,10 @@ export const ask = async (
       ])
 
   const executor = isAnthropic
-    ? new AgentExecutor({ agent: runnableAgent, tools: kbTools })
+    ? new AgentExecutor({ agent: runnableAgent, tools: kbTools, verbose: true })
     : AgentExecutor.fromAgentAndTools({
         agent: runnableAgent,
         tools: isKb ? kbTools : tools,
-        verbose: true,
       })
   const invokee = await executor.invoke(
     {

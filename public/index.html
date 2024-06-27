@@ -133,6 +133,7 @@
             body: JSON.stringify({
               question,
               conversationId: this.conversationId,
+              model: this.llm
             }),
           })
             .then((res) => res.json())
