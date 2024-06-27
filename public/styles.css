@@ -93,14 +93,24 @@ form {
   gap: 0.5em;
 }
 
+.input-wrapper {
+  display: flex;
+  gap: 0.5em;
+}
+
 @media (min-width: 500px) {
   form {
     gap: 1em;
   }
+
+  .input-wrapper {
+    display: flex;
+    gap: 1em;
+  }
 }
 
-form textarea {
-  flex-basis: 200%;
+.input-wrapper select {
+  flex-basis: 150px;
 }
 
 ul,
@@ -192,15 +202,6 @@ a {
   .current-message {
     padding: 0.5em;
   }
-}
-
-.input-wrapper {
-  display: flex;
-  gap: 1em;
-}
-
-.input-wrapper select {
-  flex-basis: 150px;
 }
 
 .clear {
