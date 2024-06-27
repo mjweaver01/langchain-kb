@@ -47,12 +47,18 @@
         </div>
         <div class="ask-question">
           <form @submit.prevent="ask()">
-            <input
-              id="question-input"
-              name="question"
-              placeholder="Ask anything..."
-              v-model="question"
-            />
+            <div class="input-wrapper">
+              <input
+                id="question-input"
+                name="question"
+                placeholder="Ask anything..."
+                v-model="question"
+              />
+              <select v-model="llm" v-on:change="setLlm">
+                <option value="openai">GPT-4o</option>
+                <option value="anthropic">Claude Opus</option>
+              </select>
+            </div>
             <button type="submit">Ask</button>
           </form>
         </div>
@@ -70,6 +76,7 @@
           loading: false,
           conversationId: '',
           question: '',
+          llm: 'anthropic',
           defaultQuestions: [
             'Tell me a little bit about yourself',
             'Give me a high level overview of Westside Barbell',
@@ -95,6 +102,9 @@
         const params = new URLSearchParams(window.location.search)
         const conversationId = params.get('conversationId')
         if(conversationId.length > 0) this.getConversation(conversationId)
+
+        const selectedModel = params.get('model') || params.get('llm')
+        if(selectedModel.length > 0) this.llm = selectedModel
       },
       methods: {
         async ask(sentQuestion = '') {
@@ -202,12 +212,18 @@
           const url = new URL(window.location.href)
           url.searchParams.delete("conversationId")
           window.history.pushState(null, '', url.toString())
-
         },
 
         sanitizeMessage(message) {
           return this.converter.makeHtml(message)
         },
+
+        setLlm() {
+          const url = new URL(window.location.href)
+          url.searchParams.set("model", this.llm)
+          window.history.pushState(null, '', url.toString())
+          clearConversation()
+        }
       },
     }).mount('#app')
   </script>

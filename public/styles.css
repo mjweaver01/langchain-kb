@@ -122,15 +122,21 @@ ol p {
 
 input,
 textarea,
-button {
+button,
+select {
   display: block;
-  appearance: none;
   padding: 1em;
   background: var(--white);
   border: 1px solid var(--blue);
   border-radius: 5px;
   width: 100%;
   font-size: 1rem;
+}
+
+input,
+textarea,
+button {
+  appearance: none;
 }
 
 input:focus,
@@ -186,6 +192,15 @@ a {
   .current-message {
     padding: 0.5em;
   }
+}
+
+.input-wrapper {
+  display: flex;
+  gap: 1em;
+}
+
+.input-wrapper select {
+  flex-basis: 150px;
 }
 
 .clear {
