@@ -30,11 +30,11 @@ export const ask = async (
   conversationId?: string,
   model?: string,
 ): Promise<Answer> => {
-  loggy(`[${source}] Asking: ${JSON.stringify(input).substring(0, 100)}`)
-
   const isGist = source === 'gist'
   const isKb = source === 'kb'
   const isAnthropic = model === 'anthropic'
+
+  loggy(`[${source}] Asking ${model || 'openai'}: ${JSON.stringify(input).substring(0, 100)}`)
 
   const currentPromptTemplate = isKb
     ? kbSystemPromptTemplate(isAnthropic)
