@@ -76,7 +76,7 @@
           loading: false,
           conversationId: '',
           question: '',
-          llm: 'anthropic',
+          llm: 'openai',
           defaultQuestions: [
             'Tell me a little bit about yourself',
             'Give me a high level overview of Westside Barbell',
@@ -101,10 +101,11 @@
       mounted() {
         const params = new URLSearchParams(window.location.search)
         const conversationId = params.get('conversationId')
-        if(conversationId.length > 0) this.getConversation(conversationId)
+        if(conversationId?.length > 0) this.getConversation(conversationId)
 
+        
         const selectedModel = params.get('model') || params.get('llm')
-        if(selectedModel.length > 0) this.llm = selectedModel
+        if(selectedModel?.length > 0) this.llm = selectedModel
       },
       methods: {
         async ask(sentQuestion = '') {

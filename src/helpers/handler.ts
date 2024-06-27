@@ -41,7 +41,7 @@ export const handler = async (req: Request, res: Response, context: SourceType) 
     })
 
   if (!nocache) {
-    const cachedData = await getCache(context, currentTime, input)
+    const cachedData = await getCache(context, currentTime, model, input)
     const latestCacheHit = cachedData?.[0]
 
     if (latestCacheHit && latestCacheHit.answer) {
