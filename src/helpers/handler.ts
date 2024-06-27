@@ -66,7 +66,7 @@ export const handler = async (req: Request, res: Response, context: SourceType) 
 
   try {
     const answer = await askQuestion(input, context, conversationId, model)
-    saveToCache(context, currentTime, input, answer)
+    saveToCache(context, currentTime, input, answer, model)
 
     return res.json({
       answer: answer ?? 42,
