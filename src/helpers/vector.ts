@@ -11,6 +11,7 @@ import { supabase } from './supabase'
 import sitemapDocs from '../assets/sitemap_docs.json'
 
 const LIMIT = 10
+const ANTHROPIC_LIMIT = 20
 
 const format = (text: string) => text.replace(/\s\s+/g, ' ').split('Share This Post')[0].trim()
 const formatDocs = (docs: Document[]) => {
@@ -47,8 +48,9 @@ export async function populate(useSupabase = false, writeFile = false) {
   }
 }
 
-export const vector = async (question: string) => {
+export const vector = async (question: string, isAnthropic = false) => {
   loggy(`[vector] searching "${question}"`)
+  const vectorLimit = isAnthropic ? ANTHROPIC_LIMIT : LIMIT
 
   if (!docs || docs.length === 0 || !Array.isArray(docs)) {
     await populate()
@@ -65,7 +67,7 @@ export const vector = async (question: string) => {
         keys: ['pageContent', 'metadata.title', 'metadata.description', 'metadata.source'],
       })
       .map((x) => ({ score: x.score, ...x.obj }))
-      .slice(0, LIMIT * 2)
+      .slice(0, vectorLimit * 2)
 
     // fallback filter for fuzzy search
     const qArray = question.split(' ').filter((v) => v.length > 2)
@@ -96,7 +98,7 @@ export const vector = async (question: string) => {
         }
       })
       .sort((a: any, b: any) => b.score - a.score)
-      .slice(0, LIMIT * 2)
+      .slice(0, vectorLimit * 2)
 
     // merge results
     var seen: any = {}
@@ -106,20 +108,27 @@ export const vector = async (question: string) => {
         var k = item.metadata.url || item.pageContent
         return seen.hasOwnProperty(k) ? false : (seen[k] = true)
       })
-      .slice(0, LIMIT)
+      .slice(0, vectorLimit)
 
-    const hnsw = await HNSWLib.fromDocuments(
-      mergedResults,
-      new OpenAIEmbeddings({
-        model: 'text-embedding-3-large',
-      }),
-    )
-    loggy(`[vector] fed vector store`)
+    // anthropic doesn't have it's own text embedding model
+    // so we'll just use fuzzysort directly
+    if (isAnthropic) {
+      loggy(`[vector] isAnthropic - skip vector & use fuzzysort directly`)
+      return mergedResults
+    } else {
+      const hnsw = await HNSWLib.fromDocuments(
+        mergedResults,
+        new OpenAIEmbeddings({
+          model: 'text-embedding-3-large',
+        }),
+      )
+      loggy(`[vector] fed vector store`)
 
-    const results = await hnsw.similaritySearch(question, LIMIT)
-    loggy(`[vector] queried the vector store`)
+      const results = await hnsw.similaritySearch(question, vectorLimit)
+      loggy(`[vector] queried the vector store`)
 
-    return results
+      return results
+    }
   }
 
   loggy(`[vector] no documents found`)
@@ -129,6 +138,7 @@ export const vector = async (question: string) => {
 // -----------
 // RAG – WORK IN PROGRESS
 // The question is: how to feed it all the 420+ entries?
+// Need better API key? More context window
 // -----------
 
 function chunker(arr: any[], size: number) {

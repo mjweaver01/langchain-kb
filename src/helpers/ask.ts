@@ -78,7 +78,7 @@ export const ask = async (
       ])
 
   const executor = isAnthropic
-    ? new AgentExecutor({ agent: runnableAgent, tools: kbTools, verbose: true })
+    ? new AgentExecutor({ agent: runnableAgent, tools: kbTools })
     : AgentExecutor.fromAgentAndTools({
         agent: runnableAgent,
         tools: isKb ? kbTools : tools,
@@ -89,7 +89,7 @@ export const ask = async (
       chat_history: chatHistory,
     },
     {
-      configurable: { sessionId: conversationId },
+      configurable: { sessionId: conversationId, isAnthropic: isAnthropic },
     },
   )
 

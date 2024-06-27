@@ -65,6 +65,7 @@ Please don't encapsulate anything in code, only provide the markdown inside of t
 Don't provide a doctype, or any other raw markup; only provide the markdown you would receive inside of the <body> tag.
 
 Don't ask how you can assist; just do the best you can.
+Don't tell me about the tools you will use. Just use them.
 `
 
 export const kbToolPrompt = `

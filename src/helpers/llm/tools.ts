@@ -12,6 +12,7 @@ const knowledgeBaseLoader = new DynamicTool({
   description: compiledKbToolPrompt,
   func: async (question: string, runManager, meta) => {
     const sessionId = meta?.configurable?.sessionId
+    const isAnthropic = meta?.configurable?.isAnthropic
 
     const trace = langfuse.trace({
       name: 'knowledge_base',
@@ -31,7 +32,7 @@ const knowledgeBaseLoader = new DynamicTool({
 
     try {
       try {
-        const results = await vector(question)
+        const results = await vector(question, isAnthropic)
         // const results = await rag(question)
 
         if (results.length > 0) {
