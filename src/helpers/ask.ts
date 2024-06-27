@@ -37,7 +37,7 @@ export const ask = async (
   const isAnthropic = model === 'anthropic'
 
   const currentPromptTemplate = isKb
-    ? await kbSystemPromptTemplate(isAnthropic)
+    ? kbSystemPromptTemplate(isAnthropic)
     : isGist
     ? gistSystemPromptTemplate
     : gptSystemPromptTemplate

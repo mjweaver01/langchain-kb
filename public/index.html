@@ -54,7 +54,7 @@
                 placeholder="Ask anything..."
                 v-model="question"
               />
-              <select v-model="llm" v-on:change="setLlm">
+              <select v-model="llm" @change="setLlm">
                 <option value="openai">GPT-4o</option>
                 <option value="anthropic">Claude Opus</option>
               </select>
@@ -223,7 +223,7 @@
           const url = new URL(window.location.href)
           url.searchParams.set("model", this.llm)
           window.history.pushState(null, '', url.toString())
-          clearConversation()
+          this.clearConversation()
         }
       },
     }).mount('#app')

@@ -1,7 +1,6 @@
 import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts'
-import { SystemMessage, HumanMessage, AIMessage } from '@langchain/core/messages'
-import langfuse from '../langfuse'
 import { gistSystemPrompt, kbToolPrompt, kbSystemPrompt, systemPrompt } from '../constants'
+import langfuse from '../langfuse'
 
 export const generatePromptTemplate = (sentPrompt: string, isAnthropic?: boolean) => {
   return ChatPromptTemplate.fromMessages(
@@ -28,8 +27,8 @@ const compiledKbSystemPrompt = kbPrompt.prompt ? kbPrompt.prompt : kbSystemPromp
 export const gptSystemPromptTemplate = generatePromptTemplate(compiledSystemPrompt)
 export const gistSystemPromptTemplate = generatePromptTemplate(gistSystemPrompt)
 // export const kbSystemPromptTemplate = generatePromptTemplate(compiledKbSystemPrompt)
-export const kbSystemPromptTemplate = async (isAnthropic = false) =>
-  await generatePromptTemplate(compiledKbSystemPrompt, isAnthropic)
+export const kbSystemPromptTemplate = (isAnthropic = false) =>
+  generatePromptTemplate(compiledKbSystemPrompt, isAnthropic)
 const remoteKbToolPrompt = await langfuse.getPrompt('KB_TOOL_PROMPT')
 export const compiledKbToolPrompt = remoteKbToolPrompt.prompt
   ? remoteKbToolPrompt.prompt
