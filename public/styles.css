@@ -216,6 +216,7 @@ a {
   grid-template-columns: 1fr;
   grid-gap: 1em;
   margin-bottom: 2em;
+  overflow: auto;
 }
 
 .question {
@@ -228,6 +229,7 @@ a {
 @media (min-width: 500px) {
   .questions {
     grid-template-columns: 1fr 1fr;
+    max-height: 50vh;
   }
 }
 
