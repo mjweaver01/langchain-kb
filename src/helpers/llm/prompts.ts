@@ -12,10 +12,11 @@ export const generatePromptTemplate = (sentPrompt: string, isAnthropic?: boolean
   return ChatPromptTemplate.fromMessages(
     isAnthropic
       ? [
-          ['system', sentPrompt + anthropicNudge],
+          ['system', sentPrompt],
           ['placeholder', '{chat_history}'],
-          ['human', '{input}'],
+          ['human', anthropicNudge],
           ['placeholder', '{agent_scratchpad}'],
+          ['human', '{input}'],
         ]
       : [
           ['system', sentPrompt],
