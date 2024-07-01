@@ -143,6 +143,32 @@ select {
   font-size: 1rem;
 }
 
+.select {
+  position: relative;
+}
+
+.select select {
+  padding-right: 1.75em;
+  background-color: transparent;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
+.select:after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    margin-top: -2px;
+    right: 12px;
+    width: 0; 
+    height: 0; 
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--blue);
+  }
+}
+
 input,
 textarea,
 button {
@@ -215,7 +241,7 @@ a {
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: 1em;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   overflow: auto;
 }
 

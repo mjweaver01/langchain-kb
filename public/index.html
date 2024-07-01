@@ -54,10 +54,12 @@
                 placeholder="Ask anything..."
                 v-model="question"
               />
-              <select v-model="llm" @change="setLlm">
-                <option value="openai">GPT-4o</option>
-                <option value="anthropic">Claude Sonnet</option>
-              </select>
+              <div class="select">
+                <select v-model="llm" @change="setLlm">
+                  <option value="openai">GPT-4o</option>
+                  <option value="anthropic">Claude Sonnet</option>
+                </select>
+              </div>
             </div>
             <button type="submit">Ask</button>
           </form>
