@@ -1,5 +1,11 @@
 import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts'
-import { gistSystemPrompt, kbToolPrompt, kbSystemPrompt, systemPrompt } from '../constants'
+import {
+  gistSystemPrompt,
+  kbToolPrompt,
+  kbSystemPrompt,
+  systemPrompt,
+  anthropicNudge,
+} from '../constants'
 import langfuse from '../langfuse'
 
 export const generatePromptTemplate = (sentPrompt: string, isAnthropic?: boolean) => {
@@ -10,6 +16,7 @@ export const generatePromptTemplate = (sentPrompt: string, isAnthropic?: boolean
           ['placeholder', '{chat_history}'],
           ['human', '{input}'],
           ['placeholder', '{agent_scratchpad}'],
+          ['human', anthropicNudge],
         ]
       : [
           ['system', sentPrompt],
