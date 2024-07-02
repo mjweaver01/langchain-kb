@@ -241,8 +241,9 @@ a {
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: 1em;
-  margin-bottom: 1em;
   overflow: auto;
+  padding: 1em 1em 0.5em;
+  margin: -1em -1em 1em;
 }
 
 .question {
