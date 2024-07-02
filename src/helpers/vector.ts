@@ -10,8 +10,8 @@ import { sitemapUrl } from './constants'
 import { supabase } from './supabase'
 import sitemapDocs from '../assets/sitemap_docs.json'
 
-const LIMIT = 10
-const ANTHROPIC_LIMIT = 20
+const OPEN_AI_LIMIT = 10
+const ANTHROPIC_LIMIT = 10
 
 const format = (text: string) => text.replace(/\s\s+/g, ' ').split('Share This Post')[0].trim()
 const formatDocs = (docs: Document[]) => {
@@ -50,7 +50,7 @@ export async function populate(useSupabase = false, writeFile = false) {
 
 export const vector = async (question: string, isAnthropic = false) => {
   loggy(`[vector] searching "${question}"`)
-  const vectorLimit = isAnthropic ? ANTHROPIC_LIMIT : LIMIT
+  const vectorLimit = isAnthropic ? ANTHROPIC_LIMIT : OPEN_AI_LIMIT
 
   if (!docs || docs.length === 0 || !Array.isArray(docs)) {
     await populate()
