@@ -4,7 +4,7 @@ import { claude3Model } from '../constants'
 
 export const llm = (newModel: boolean = false) =>
   new ChatAnthropic({
-    temperature: 0.5,
+    temperature: 0.3,
     model: claude3Model,
     apiKey: process.env.ANTHROPIC_API_KEY,
     maxTokens: 1024,
