@@ -67,11 +67,11 @@
             <button type="submit" disabled v-if="loggingIn">Logging in</button>
             <button type="submit" v-else-if="login.isNew">Sign up</button>
             <button type="submit" v-else>Log in</button>
+            <p v-if="loginError.length > 0" class="login-error">{{loginError}}</p>
             <div class="checkbox">
               <input type="checkbox" id="new-user" name="new-user" v-model="login.isNew" />
               <label for="new-user">Create new user</label>
             </div>
-            <p v-if="loginError.length > 0" class="login-error">{{loginError}}</p>
           </form> 
         </div>
       </div>

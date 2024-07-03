@@ -110,7 +110,9 @@ form {
 }
 
 .login-error {
-  color: var(--red)
+  color: var(--red);
+  margin: 0;
+  text-align: center;
 }
 
 .logout {
