@@ -102,11 +102,13 @@ form {
 
 .checkbox {
   display: flex;
+  align-items: center;
   gap: 0.5em;
 }
 
 .checkbox input {
   width: auto;
+  margin: 0;
 }
 
 .login-error {
