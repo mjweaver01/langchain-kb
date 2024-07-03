@@ -26,7 +26,7 @@
         </p>
         <div v-if="user?.id">
           <div class="questions" v-if="messages.length <= 0">
-            <div class="question" v-for="question in defaultQuestions" @click="ask(question)">
+            <div class="question" v-for="question in defaultQuestions" @click="ask(question, true)">
               {{ question }}
             </div>
           </div>
@@ -145,14 +145,6 @@
         }
       },
       async mounted() {
-        const params = new URLSearchParams(window.location.search)
-        const conversationId = params.get('conversationId')
-        if(conversationId?.length > 0) this.getConversation(conversationId)
-
-        
-        const selectedModel = params.get('model') || params.get('llm')
-        if(selectedModel?.length > 0) this.llm = selectedModel
-
         this.client = supabase.createClient(
           'https://miagbxlunmdgokihezhx.supabase.co',
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pYWdieGx1bm1kZ29raWhlemh4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxNTQ0ODE4OSwiZXhwIjoyMDMxMDI0MTg5fQ.8EQH68x8024MuSaK9MHTJJTfRWwgBDF1zfSoUL2afyE'
@@ -161,20 +153,28 @@
         const s = await this.client.auth.getSession()
         if(s.data?.session?.user) {
           this.user = s.data.session.user
-        }  else {
-          this.authUser()
+        } else {
+          await this.authUser()
         }
+
+        const params = new URLSearchParams(window.location.search)
+        const conversationId = params.get('conversationId')
+        if(conversationId?.length > 0) this.getConversation(conversationId)
+
+        
+        const selectedModel = params.get('model') || params.get('llm')
+        if(selectedModel?.length > 0) this.llm = selectedModel
       },
       methods: {
         // conversation 
-        async ask(sentQuestion = '') {
+        async ask(sentQuestion = '', isDefaultQuestion = false) {
           const question =
-            sentQuestion.trim() !== ''
-              ? sentQuestion.trim()
-              : this.question.trim() !== ''
+          sentQuestion?.trim() !== ''
+            ? sentQuestion?.trim()
+            : this.question.trim() !== ''
               ? this.question.trim()
               : false
-          if (question === false) return
+          if (!question || question.length <= 0) return
 
           this.loading = true
           this.scrollToBottom()
@@ -193,7 +193,8 @@
             body: JSON.stringify({
               question,
               conversationId: this.conversationId,
-              model: this.llm
+              model: this.llm,
+              user: this.isDefaultQuestion ? 'anonymous' : this.user?.id
             }),
           })
             .then((res) => res.json())
@@ -234,7 +235,7 @@
              })
         },
 
-        getConversation(sentConversation) {
+        async getConversation(sentConversation) {
           fetch(`/get-conversation${window.location.search}`, {
             method: 'POST',
             headers: {
@@ -242,6 +243,7 @@
             },
             body: JSON.stringify({
               conversationId: sentConversation,
+              user: this.isDefaultQuestion ? 'anonymous' : this.user?.id
             }),
           })
             .then(res => res.json())

@@ -27,6 +27,7 @@ import { Runnable } from '@langchain/core/runnables'
 export const ask = async (
   input: string,
   source: SourceType,
+  user: string,
   conversationId?: string,
   model?: string,
 ): Promise<Answer> => {
@@ -49,11 +50,15 @@ export const ask = async (
     ? anthropicModelWithTools
     : modelWithFunctions
 
-  const { data } = await supabase
+  let query = supabase
     .from('conversations')
     .select('*')
     .eq('id', conversationId)
     .eq('source', source)
+  if (user && user !== 'anonymous') {
+    query = query.eq('user', user)
+  }
+  const { data } = await query
   const messages = data?.[0]?.messages ?? []
   const chatHistory: BaseMessage[] = messages.map((message: { role: string; content: string }) => {
     if (message.role === 'ai') {
@@ -107,6 +112,8 @@ export const ask = async (
         },
       ])
       .eq('id', conversationId)
+      .eq('user', user)
+      .eq('source', source)
 
     if (error) {
       loggy(error.message, true)
@@ -115,6 +122,7 @@ export const ask = async (
     const { error } = await supabase.from('conversations').upsert({
       id: conversationId,
       source,
+      user,
       messages: [
         ...messages,
         { role: 'user', content: invokee.input },
@@ -137,6 +145,7 @@ export const ask = async (
 export async function askQuestion(
   input: string = defaultQuestion,
   source: SourceType,
+  user: string,
   conversationId?: string,
   model?: string,
 ): Promise<Answer> {
@@ -150,7 +159,7 @@ export async function askQuestion(
     },
   })
 
-  const response = await ask(input, source, sessionId, model)
+  const response = await ask(input, source, user, sessionId, model)
 
   trace.update({
     output: JSON.stringify(response?.output ?? response),

@@ -10,13 +10,14 @@ export const handler = async (req: Request, res: Response, context: SourceType) 
   let input = req.body?.question?.trim() ?? null
   const nocache = req.body?.nocache ?? req.query?.nocache === 'true' ?? false
   const model = req.body?.model ?? req.query?.model ?? 'openai'
+  const user = req.body?.user ?? req.query?.user ?? 'anonymous'
 
   loggy(`[${context}] ${input?.toString().substring(0, 50) ?? 'hit handler'}`, false)
 
   const currentTime = Date.now()
 
   if (context === 'conversation') {
-    const conversation = await getConversation(conversationId)
+    const conversation = await getConversation(conversationId, user)
 
     if (!conversationId || conversationId.length <= 0 || !conversation) {
       return res.json({
@@ -41,7 +42,7 @@ export const handler = async (req: Request, res: Response, context: SourceType) 
     })
 
   if (!nocache) {
-    const cachedData = await getCache(context, currentTime, model, input)
+    const cachedData = await getCache(context, currentTime, model, conversationId, user, input)
     const latestCacheHit = cachedData?.[0]
 
     if (latestCacheHit && latestCacheHit.answer) {
@@ -65,8 +66,8 @@ export const handler = async (req: Request, res: Response, context: SourceType) 
   }
 
   try {
-    const answer = await askQuestion(input, context, conversationId, model)
-    saveToCache(context, currentTime, input, answer, model)
+    const answer = await askQuestion(input, context, user, conversationId, model)
+    saveToCache(context, currentTime, input, answer, model, user)
 
     return res.json({
       answer: answer ?? 42,

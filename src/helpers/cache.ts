@@ -1,7 +1,14 @@
 import { supabase } from './supabase'
 import loggy from './loggy'
 
-export const getCache = async (context: string, time: number, model: string, question?: any) => {
+export const getCache = async (
+  context: string,
+  time: number,
+  model: string,
+  conversationId?: string,
+  user?: string,
+  question?: any,
+) => {
   if (context === 'status') {
     const { data } = await supabase
       .from('caches')
@@ -12,13 +19,24 @@ export const getCache = async (context: string, time: number, model: string, que
       .order('time', { ascending: false })
     return data
   } else {
-    const { data } = await supabase
+    let query = supabase
       .from('caches')
       .select('*')
       .eq('context', context)
       .eq('question', question)
       .eq('model', model)
       .order('time', { ascending: false })
+
+    if (conversationId) {
+      query = query.eq('id', conversationId)
+    }
+
+    if (user) {
+      query = query.eq('user', user)
+    }
+
+    const { data } = await query
+
     return data
   }
 }
@@ -29,6 +47,7 @@ export const saveToCache = async (
   question: string,
   answer: any,
   model: string,
+  user: string,
 ) => {
   if (answer) {
     try {
@@ -38,6 +57,7 @@ export const saveToCache = async (
         question,
         answer,
         model,
+        user,
       })
 
       if (error) {
@@ -49,7 +69,11 @@ export const saveToCache = async (
   }
 }
 
-export const getConversation = async (conversationId: string) => {
-  const { data } = await supabase.from('conversations').select('*').eq('id', conversationId)
+export const getConversation = async (conversationId: string, user: string) => {
+  let query = supabase.from('conversations').select('*').eq('id', conversationId)
+  if (user) {
+    query = query.eq('user', user)
+  }
+  const { data } = await query
   return data?.[0]
 }
