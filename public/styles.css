@@ -22,6 +22,7 @@
 :root {
   --mobile: 768px;
   --blue: #306cf4;
+  --red: #ea0000;
   --light-blue: #dbe8f7;
   --dark-blue: #1d2024;
   --black: #000;
@@ -91,6 +92,35 @@ form {
   display: grid;
   grid-template-columns: auto 75px;
   gap: 0.5em;
+}
+
+.login-form form {
+  display: flex;
+  flex-flow: column;
+  gap: 1em;
+}
+
+.checkbox {
+  display: flex;
+  gap: 0.5em;
+}
+
+.checkbox input {
+  width: auto;
+}
+
+.login-error {
+  color: var(--red)
+}
+
+.logout {
+  text-align: right;
+  width: 100%;
+}
+
+.logout p {
+  text-decoration: underline !important;
+  cursor: pointer;
 }
 
 .input-wrapper {

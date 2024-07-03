@@ -10,38 +10,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   </head>
 
   <body>
     <div id="app">
       <div class="top">
+        <div class="logout" v-if="user?.id">
+          <p v-if="loggingOut">Logging out</p>
+          <p @click="signOutUser" v-else>Logout</p>
+        </div>
         <h1 class="hero"><img src="./wsbb.png" width="75" height="75"/> Louie.ai</h1>
         <p>
           An AI chatbot pretrained on Westside Barbell's <a href="https://westside-barbell.com/blogs/the-blog/" target="_blank">Blog</a>.
         </p>
-        <div class="questions" v-if="messages.length <= 0">
-          <div class="question" v-for="question in defaultQuestions" @click="ask(question)">
-            {{ question }}
+        <div v-if="user?.id">
+          <div class="questions" v-if="messages.length <= 0">
+            <div class="question" v-for="question in defaultQuestions" @click="ask(question)">
+              {{ question }}
+            </div>
+          </div>
+          <div id="imessage" class="imessage" v-if="messages.length > 0">
+            <p
+              v-for="message in messages"
+              v-bind:class="{ 'from-me': message.isUser || message.role === 'user', 'from-them': !message.isUser && message.role !== 'user' }"
+              v-html="sanitizeMessage(message.text?.output ?? message.text ?? message.content)"
+            ></p>
+            <p v-if="loading" class="from-them loading-message">
+              <span class="loading">
+                <span class="dot one"></span>
+                <span class="dot two"></span>
+                <span class="dot three"></span>
+              </span>
+              <span class="tail"></span>
+            </p>
+            <div id="bottom"></div>
           </div>
         </div>
-        <div id="imessage" class="imessage" v-if="messages.length > 0">
-          <p
-            v-for="message in messages"
-            v-bind:class="{ 'from-me': message.isUser || message.role === 'user', 'from-them': !message.isUser && message.role !== 'user' }"
-            v-html="sanitizeMessage(message.text?.output ?? message.text ?? message.content)"
-          ></p>
-          <p v-if="loading" class="from-them loading-message">
-            <span class="loading">
-              <span class="dot one"></span>
-              <span class="dot two"></span>
-              <span class="dot three"></span>
-            </span>
-            <span class="tail"></span>
-          </p>
-          <div id="bottom"></div>
+        <div v-else class="login-form">
+          <form @submit.prevent="signInOrCreateUser">
+            <input
+              id="email-input"
+              name="email"
+              placeholder="Email"
+              v-model="login.email"
+              :disabled="loggingIn"
+            />
+            <input
+              id="password-input"
+              name="password"
+              placeholder="Password"
+              type="password"
+              v-model="login.password"
+              :disabled="loggingIn"
+            />
+            <button type="submit" disabled v-if="loggingIn">Logging in</button>
+            <button type="submit" v-else-if="login.isNew">Sign up</button>
+            <button type="submit" v-else>Log in</button>
+            <div class="checkbox">
+              <input type="checkbox" id="new-user" name="new-user" v-model="login.isNew" />
+              <label for="new-user">Create new user</label>
+            </div>
+            <p v-if="loginError.length > 0" class="login-error">{{loginError}}</p>
+          </form> 
         </div>
       </div>
-      <div class="current-message">
+      <div v-if="user?.id" class="current-message">
         <div class="clear" v-if="messages.length > 0" @click="clearConversation">
           Clear conversation
         </div>
@@ -74,6 +108,16 @@
     createApp({
       data() {
         return {
+          client: {},
+          login: {
+            email: '',
+            password: '',
+            isNew: false
+          },
+          loggingIn: false,
+          loggingOut: false,
+          loginError: '',
+          user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {},
           messages: [],
           loading: false,
           conversationId: '',
@@ -100,7 +144,7 @@
           converter: new showdown.Converter(),
         }
       },
-      mounted() {
+      async mounted() {
         const params = new URLSearchParams(window.location.search)
         const conversationId = params.get('conversationId')
         if(conversationId?.length > 0) this.getConversation(conversationId)
@@ -108,8 +152,21 @@
         
         const selectedModel = params.get('model') || params.get('llm')
         if(selectedModel?.length > 0) this.llm = selectedModel
+
+        this.client = supabase.createClient(
+          'https://miagbxlunmdgokihezhx.supabase.co',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pYWdieGx1bm1kZ29raWhlemh4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxNTQ0ODE4OSwiZXhwIjoyMDMxMDI0MTg5fQ.8EQH68x8024MuSaK9MHTJJTfRWwgBDF1zfSoUL2afyE'
+        )
+
+        const s = await this.client.auth.getSession()
+        if(s.data?.session?.user) {
+          this.user = s.data.session.user
+        }  else {
+          this.authUser()
+        }
       },
       methods: {
+        // conversation 
         async ask(sentQuestion = '') {
           const question =
             sentQuestion.trim() !== ''
@@ -227,6 +284,70 @@
           url.searchParams.set("model", this.llm)
           window.history.pushState(null, '', url.toString())
           this.clearConversation()
+        },
+
+        // user management
+        async createUser() {
+          const u = await this.client.auth.signUp({
+            email: this.login.email,
+            password: this.login.password
+          })
+
+          if(u.error && u.error.message) {
+            this.loginError = u.error.message
+          } else if(u.data?.user?.id) {
+            this.user = u.data.user
+            localStorage.setItem('user', JSON.stringify(this.user))
+            this.loginError = ''
+          }
+        },
+
+        async signInUser() {
+          const u = await this.client.auth.signInWithPassword({
+            email: this.login.email,
+            password: this.login.password
+          })
+
+          if(u.error && u.error.message) {
+            this.loginError = u.error.message
+          } else if(u.data?.user?.id) {
+            this.user = u.data.user
+            localStorage.setItem('user', JSON.stringify(this.user))
+            this.loginError = ''
+          }
+        },
+
+        async signInOrCreateUser() {
+          this.loggingIn = true
+
+          if(this.login.isNew) {
+            await this.createUser()
+          } else {
+            await this.signInUser()
+          }
+
+          this.loggingIn = false
+        },
+
+        async signOutUser() {
+          this.loggingOut = true
+
+          try {
+            await this.client.auth.signOut()
+          } catch {}
+
+          this.user = null
+          localStorage.removeItem('user')
+
+          this.loggingOut = false
+        },
+
+        async authUser() {
+          const u = await this.client.auth.getUser()
+          if(u?.data?.user) {
+            this.user = u.data.user
+            localStorage.setItem('user', JSON.stringify(this.user))
+          }
         }
       },
     }).mount('#app')
